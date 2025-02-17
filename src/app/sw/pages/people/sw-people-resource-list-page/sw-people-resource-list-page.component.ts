@@ -22,7 +22,7 @@ export class SwPeopleResourceListPageComponent {
     initialValue: {},
   });
 
-  protected readonly dataResource = this.service.getAll(this.searchData);
+  protected readonly resource = this.service.getAll(this.searchData);
 
   private router = inject(Router);
 
@@ -33,13 +33,13 @@ export class SwPeopleResourceListPageComponent {
     });
   }
 
-  protected onSelect(id: string): void {
-    const idNumber = new URL(id).pathname
+  protected onSelect(url: string): void {
+    const id = new URL(url).pathname
       .split('/')
       .reverse()
       .find((path) => path !== '');
 
-    this.router.navigate(['..', idNumber], {
+    this.router.navigate(['..', id], {
       relativeTo: this.activatedRoute,
     });
   }

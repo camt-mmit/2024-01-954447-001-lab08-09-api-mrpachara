@@ -41,10 +41,11 @@ export function resourceSignal<T extends Resource = Resource>(
   return resource.asReadonly();
 }
 
-export function parseResource(resource: Resource) {
-  const { created, edited, url } = resource;
+export function parseResource<T extends Resource = Resource>(resource: T) {
+  const { created, edited, url, ...rest } = resource;
 
   return {
+    ...rest,
     id: url,
     created: new Date(created),
     edited: new Date(edited),
@@ -52,23 +53,23 @@ export function parseResource(resource: Resource) {
   } as const;
 }
 
-export function parseResourcesList<T extends Resource>(
+export function parseResourcesList<T extends Resource = Resource>(
   resourcesList: ResourcesList<T>,
 ) {
-  const { previous, next } = resourcesList;
+  const { previous, next, ...rest } = resourcesList;
 
   return {
+    ...rest,
     previous: previous === null ? null : new URL(previous),
     next: next === null ? null : new URL(next),
   } as const;
 }
 
 export function parsePerson(person: Person) {
-  const { homeworld, films, species, starships, vehicles } = person;
+  const { homeworld, films, species, starships, vehicles, ...rest } = person;
 
   return {
-    ...person,
-    ...parseResource(person),
+    ...parseResource(rest),
     homeworld: homeworld === null ? null : new URL(homeworld),
     films: films.map((url) => new URL(url)) as readonly URL[],
     species: species.map((url) => new URL(url)) as readonly URL[],
@@ -77,12 +78,11 @@ export function parsePerson(person: Person) {
   } as const;
 }
 
-export function parsePeopleList(peopleList: ResourcesList<Person>) {
-  const { results } = peopleList;
+export function parsePeopleList(resourcesList: ResourcesList<Person>) {
+  const { results } = resourcesList;
 
   return {
-    ...peopleList,
-    ...parseResourcesList(peopleList),
+    ...parseResourcesList(resourcesList),
     results: results.map((result) =>
       parsePerson(result),
     ) as readonly ReturnType<typeof parsePerson>[],
