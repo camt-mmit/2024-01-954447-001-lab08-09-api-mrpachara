@@ -1,4 +1,4 @@
-import { Injectable, resource, ResourceRef, Signal } from '@angular/core';
+import { Injectable, resource, ResourceRef } from '@angular/core';
 import { apiUrl } from '../helpers';
 import { Person, ResourcesList, SearchData } from '../models';
 
@@ -9,7 +9,7 @@ const serviceUrl = `${apiUrl}/people/`;
 })
 export class PeopleResourceService {
   getAll(
-    searchData: Signal<SearchData>,
+    searchData: () => SearchData,
   ): ResourceRef<ResourcesList<Person> | undefined> {
     return resource({
       request: searchData,
@@ -35,7 +35,7 @@ export class PeopleResourceService {
     });
   }
 
-  get(id: Signal<string>): ResourceRef<Person | undefined> {
+  get(id: () => string): ResourceRef<Person | undefined> {
     return resource({
       request: id,
 
