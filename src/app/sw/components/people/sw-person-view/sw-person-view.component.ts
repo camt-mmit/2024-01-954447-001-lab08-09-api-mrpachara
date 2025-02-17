@@ -27,4 +27,8 @@ export class SwPersonViewComponent {
       homeworld: resourceSignal(homeworld),
     } as const;
   });
+
+  readonly normalizedName = computed(() =>
+    this.parsedData().name.replaceAll(/\s+/g, '-'),
+  );
 }

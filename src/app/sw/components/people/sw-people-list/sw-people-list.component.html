@@ -31,8 +31,13 @@
       <div class="-cmp-resoures-list">
         @for (item of parsedData.results; track item.id) {
           <div class="-cmp-resource">
-            <button type="button" (click)="select(item.id)">
-              {{ item.name }} [{{ item.gender }}]
+            <button type="button" (click)="select(item.id)" class="-cl-item">
+              <h3 class="-cl-title">{{ item.name }}</h3>
+              <b class="-cl-meta">{{
+                item.gender === 'male' ? '♂️'
+                : item.gender === 'female' ? '♀️'
+                : '[' + item.gender + ']'
+              }}</b>
             </button>
           </div>
         }

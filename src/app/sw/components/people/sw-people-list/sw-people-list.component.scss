@@ -38,6 +38,10 @@
   justify-content: end;
 }
 
+.app-cl-button {
+  cursor: pointer;
+}
+
 .-cmp-resoures-list {
   display: flex;
   flex-direction: column;
@@ -52,6 +56,28 @@
 
   & > * {
     flex: 1 0 auto;
-    height: 2em;
+  }
+
+  & > .-cl-item {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+
+    padding: 8px 3ch;
+
+    cursor: pointer;
+
+    & > * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    & > .-cl-title {
+      font-weight: bold;
+    }
+
+    & > .-cl-meta {
+      margin-left: auto;
+    }
   }
 }

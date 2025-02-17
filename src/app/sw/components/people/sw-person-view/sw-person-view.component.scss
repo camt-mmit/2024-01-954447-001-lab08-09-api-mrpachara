@@ -1,0 +1,13 @@
+.-cl-number-data {
+  display: inline-block;
+  width: 8ch;
+}
+
+.-cmp-link {
+  text-decoration: none;
+  color: var(--app-primary-color);
+
+  & > * {
+    font-size: inherit;
+  }
+}
