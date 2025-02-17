@@ -1,4 +1,4 @@
-import { signal, Signal } from '@angular/core';
+import { signal, Signal, untracked } from '@angular/core';
 import { Person, Resource, ResourcesList } from './models';
 
 export const apiUrl = 'https://swapi.dev/api';
@@ -20,25 +20,27 @@ export async function fetchResource<T extends Resource = Resource>(
 export function resourceSignal<T extends Resource = Resource>(
   url: URL | null,
 ): Signal<T | null | undefined> {
-  const resource = signal<T | null | undefined>(undefined);
+  return untracked(() => {
+    const resource = signal<T | null | undefined>(undefined);
 
-  if (url === null) {
-    resource.set(null);
-  } else {
-    (async () => {
-      const res = await fetch(url);
+    if (url === null) {
+      resource.set(null);
+    } else {
+      (async () => {
+        const res = await fetch(url);
 
-      if (res.ok) {
-        const json = await res.json();
+        if (res.ok) {
+          const json = await res.json();
 
-        resource.set(json);
-      } else {
-        return resource.set(null);
-      }
-    })();
-  }
+          resource.set(json);
+        } else {
+          return resource.set(null);
+        }
+      })();
+    }
 
-  return resource.asReadonly();
+    return resource.asReadonly();
+  });
 }
 
 export function parseResource<T extends Resource = Resource>(resource: T) {
@@ -60,17 +62,17 @@ export function parseResourcesList<T extends Resource = Resource>(
 
   return {
     ...rest,
-    previous: previous === null ? null : new URL(previous),
-    next: next === null ? null : new URL(next),
+    previous: previous !== null ? new URL(previous) : null,
+    next: next !== null ? new URL(next) : null,
   } as const;
 }
 
-export function parsePerson(person: Person) {
-  const { homeworld, films, species, starships, vehicles, ...rest } = person;
+export function parsePerson(resource: Person) {
+  const { homeworld, films, species, starships, vehicles, ...rest } = resource;
 
   return {
     ...parseResource(rest),
-    homeworld: homeworld === null ? null : new URL(homeworld),
+    homeworld: homeworld !== null ? new URL(homeworld) : null,
     films: films.map((url) => new URL(url)) as readonly URL[],
     species: species.map((url) => new URL(url)) as readonly URL[],
     starships: starships.map((url) => new URL(url)) as readonly URL[],
