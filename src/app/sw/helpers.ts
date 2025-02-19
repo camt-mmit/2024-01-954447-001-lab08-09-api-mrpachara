@@ -1,5 +1,5 @@
 import { signal, Signal, untracked } from '@angular/core';
-import { Person, Resource, ResourcesList } from './models';
+import { Person, Planet, Resource, ResourcesList, Species } from './models';
 
 export const apiUrl = 'https://swapi.dev/api';
 
@@ -17,11 +17,21 @@ export async function fetchResource<T extends Resource = Resource>(
   }
 }
 
-export function resourceSignal<T extends Resource = Resource>(
+export function resourceSignal<T>(
   url: URL | null,
-): Signal<T | null | undefined> {
+): Signal<T | null | undefined>;
+
+export function resourceSignal<T, R>(
+  url: URL | null,
+  transform: (value: T) => R,
+): Signal<R | null | undefined>;
+
+export function resourceSignal<T, R>(
+  url: URL | null,
+  transform?: (value: T) => R,
+): Signal<R | null | undefined> {
   return untracked(() => {
-    const resource = signal<T | null | undefined>(undefined);
+    const resource = signal<R | null | undefined>(undefined);
 
     if (url === null) {
       resource.set(null);
@@ -32,7 +42,9 @@ export function resourceSignal<T extends Resource = Resource>(
         if (res.ok) {
           const json = await res.json();
 
-          resource.set(json);
+          resource.set(
+            typeof transform !== 'undefined' ? transform(json) : json,
+          );
         } else {
           return resource.set(null);
         }
@@ -43,11 +55,11 @@ export function resourceSignal<T extends Resource = Resource>(
   });
 }
 
-export function parseResource<T extends Resource = Resource>(resource: T) {
-  const { created, edited, url, ...rest } = resource;
+export function parseResource(resource: Resource) {
+  const { created, edited, url } = resource;
 
   return {
-    ...rest,
+    ...resource,
     id: url,
     created: new Date(created),
     edited: new Date(edited),
@@ -55,38 +67,91 @@ export function parseResource<T extends Resource = Resource>(resource: T) {
   } as const;
 }
 
-export function parseResourcesList<T extends Resource = Resource>(
+export function parseResourcesList<T extends Resource>(
   resourcesList: ResourcesList<T>,
 ) {
-  const { previous, next, ...rest } = resourcesList;
+  const { previous, next } = resourcesList;
 
   return {
-    ...rest,
+    ...resourcesList,
     previous: previous !== null ? new URL(previous) : null,
     next: next !== null ? new URL(next) : null,
   } as const;
 }
 
+export function readonlyArray<T>(ar: T[]): readonly T[] {
+  return ar;
+}
+
 export function parsePerson(resource: Person) {
-  const { homeworld, films, species, starships, vehicles, ...rest } = resource;
+  const { homeworld, films, species, starships, vehicles } = resource;
 
   return {
-    ...parseResource(rest),
+    ...resource,
+    ...parseResource(resource),
     homeworld: homeworld !== null ? new URL(homeworld) : null,
-    films: films.map((url) => new URL(url)) as readonly URL[],
-    species: species.map((url) => new URL(url)) as readonly URL[],
-    starships: starships.map((url) => new URL(url)) as readonly URL[],
-    vehicles: vehicles.map((url) => new URL(url)) as readonly URL[],
+    films: readonlyArray(films.map((url) => new URL(url))),
+    species: readonlyArray(species.map((url) => new URL(url))),
+    starships: readonlyArray(starships.map((url) => new URL(url))),
+    vehicles: readonlyArray(vehicles.map((url) => new URL(url))),
   } as const;
 }
 
-export function parsePeopleList(resourcesList: ResourcesList<Person>) {
-  const { results } = resourcesList;
+export function parsePeopleList<T extends Person>(
+  resourcesList: ResourcesList<T>,
+) {
+  const parsedResourcesList = parseResourcesList(resourcesList);
+  const { results } = parsedResourcesList;
 
   return {
-    ...parseResourcesList(resourcesList),
-    results: results.map((result) =>
-      parsePerson(result),
-    ) as readonly ReturnType<typeof parsePerson>[],
+    ...parsedResourcesList,
+    results: readonlyArray(results.map(parsePerson)),
+  } as const;
+}
+
+export function parseSpecies(resource: Species) {
+  const { homeworld, people, films } = resource;
+
+  return {
+    ...resource,
+    ...parseResource(resource),
+    homeworld: homeworld !== null ? new URL(homeworld) : null,
+    people: readonlyArray(people.map((url) => new URL(url))),
+    films: readonlyArray(films.map((url) => new URL(url))),
+  } as const;
+}
+
+export function parseSpeciesList<T extends Species>(
+  resourcesList: ResourcesList<T>,
+) {
+  const parsedResourcesList = parseResourcesList(resourcesList);
+  const { results } = parsedResourcesList;
+
+  return {
+    ...parsedResourcesList,
+    results: readonlyArray(results.map((result) => parseSpecies(result))),
+  } as const;
+}
+
+export function parsePlanet(resource: Planet) {
+  const { residents, films } = resource;
+
+  return {
+    ...resource,
+    ...parseResource(resource),
+    residents: readonlyArray(residents.map((url) => new URL(url))),
+    films: readonlyArray(films.map((url) => new URL(url))),
+  } as const;
+}
+
+export function parsePlanetsList<T extends Planet>(
+  resourcesList: ResourcesList<T>,
+) {
+  const parsedResourcesList = parseResourcesList(resourcesList);
+  const { results } = parsedResourcesList;
+
+  return {
+    ...parsedResourcesList,
+    results: readonlyArray(results.map((result) => parsePlanet(result))),
   } as const;
 }

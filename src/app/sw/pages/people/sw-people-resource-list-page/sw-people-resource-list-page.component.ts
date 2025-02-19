@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SwPeopleListComponent } from '../../../components/people/sw-people-list/sw-people-list.component';
 import { SearchData } from '../../../models';
 import { PeopleResourceService } from '../../../services/people-resource.service';
+import { createSwNavigateFn } from '../../helpers';
 
 @Component({
   selector: 'app-sw-people-resource-list-page',
@@ -33,14 +34,9 @@ export class SwPeopleResourceListPageComponent {
     });
   }
 
-  protected onSelect(url: string): void {
-    const id = new URL(url).pathname
-      .split('/')
-      .reverse()
-      .find((path) => path !== '');
+  private readonly natigate = createSwNavigateFn();
 
-    this.router.navigate(['..', id], {
-      relativeTo: this.activatedRoute,
-    });
+  protected onSelect(url: string): void {
+    this.natigate(new URL(url));
   }
 }

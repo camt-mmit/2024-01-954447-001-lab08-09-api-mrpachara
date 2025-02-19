@@ -1,0 +1,71 @@
+<dl class="app-cmp-data-list">
+  <dt class="app-cl-title">Name</dt>
+  <dd>
+    {{ parsedData().name }}
+    <a
+      href="https://www.starwars.com/databank/{{ normalizedName() }}"
+      target="_blank"
+      class="-cl-link"
+    >
+      <i class="material-symbols-outlined">open_in_new</i>
+    </a>
+  </dd>
+
+  <dt class="app-cl-title">Classification</dt>
+  <dd>
+    {{ parsedData().classification }}
+  </dd>
+
+  <dt class="app-cl-title">Designation</dt>
+  <dd>
+    <span class="app-cl-code">{{ parsedData().designation }}</span>
+  </dd>
+
+  <dt class="app-cl-title">Average Height</dt>
+  <dd>
+    <span class="app-cl-number -cl-number-data">{{
+      parsedData().average_height
+    }}</span>
+    cm
+  </dd>
+
+  <dt class="app-cl-title">Average Lifespan</dt>
+  <dd>
+    <span class="app-cl-number -cl-number-data">{{
+      parsedData().average_lifespan
+    }}</span>
+    years
+  </dd>
+
+  <dt class="app-cl-title">Homeworld</dt>
+  <dd>
+    <ng-container *appSwResource="let $homeworld of parsedData().homeworld()">
+      {{ $homeworld.name }}
+    </ng-container>
+  </dd>
+
+  <dt class="app-cl-title">Species</dt>
+  <dd>
+    <ul class="-cl-container">
+      @for (person of parsedData().people; track $index) {
+        <li>
+          <ng-container *appSwResource="let $person of person()">
+            <a
+              [href]="$person.url"
+              (click)="$event.preventDefault()"
+              (click)="onLinkClick($person.url)"
+              class="-cl-link"
+              >{{ $person.name }}</a
+            >
+          </ng-container>
+        </li>
+      }
+    </ul>
+  </dd>
+
+  <dt class="app-cl-title">Created</dt>
+  <dd>{{ parsedData().created | date: 'medium' }}</dd>
+
+  <dt class="app-cl-title">Edited</dt>
+  <dd>{{ parsedData().edited | date: 'medium' }}</dd>
+</dl>

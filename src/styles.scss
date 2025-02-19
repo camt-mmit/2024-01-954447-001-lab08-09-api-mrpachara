@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --app-font: 'Roboto Flex', 'Noto+Sans Thai Looped';
+  --app-font: 'Roboto Flex', 'Noto Sans Thai Looped', 'Noto Emoji';
   --app-mono-space-font: 'Roboto Mono';
   --app-font-size: 16px;
 
@@ -22,6 +22,11 @@ body {
   height: 100%;
 
   background-color: var(--app-background-color);
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .app-cl-main-content {

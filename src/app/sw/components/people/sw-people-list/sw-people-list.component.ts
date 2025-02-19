@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,7 +13,7 @@ import { Person, ResourcesList, SearchData } from '../../../models';
 
 @Component({
   selector: 'app-sw-people-list',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgClass],
   templateUrl: './sw-people-list.component.html',
   styleUrl: './sw-people-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

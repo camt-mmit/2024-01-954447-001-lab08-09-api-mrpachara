@@ -7,7 +7,10 @@
     <i class="material-symbols-outlined">close</i>
   </button>
 </form>
-@if (!isLoading()) {
+@if (isLoading()) {
+  <p>Loading...</p>
+}
+<div [ngClass]="{ '-cl-hidden': isLoading() }">
   @if (parsedData(); as parsedData) {
     <div class="-cmp-pagination">
       <button
@@ -30,22 +33,20 @@
     @if (parsedData.count > 0) {
       <div class="-cmp-resoures-list">
         @for (item of parsedData.results; track item.id) {
-          <div class="-cmp-resource">
-            <button type="button" (click)="select(item.id)" class="-cl-item">
-              <h3 class="-cl-title">{{ item.name }}</h3>
-              <b class="-cl-meta">{{
+          <button type="button" (click)="select(item.id)" class="-cmp-resource">
+            <h3 class="-cl-title">{{ item.name }}</h3>
+            <b class="-cl-meta"
+              ><span title="gender">{{
                 item.gender === 'male' ? '♂️'
                 : item.gender === 'female' ? '♀️'
                 : '[' + item.gender + ']'
-              }}</b>
-            </button>
-          </div>
+              }}</span></b
+            >
+          </button>
         }
       </div>
     } @else {
       <p>Not found!!</p>
     }
   }
-} @else {
-  <p>Loading...</p>
-}
+</div>

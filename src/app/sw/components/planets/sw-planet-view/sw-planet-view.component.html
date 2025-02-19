@@ -1,0 +1,87 @@
+<dl class="app-cmp-data-list">
+  <dt class="app-cl-title">Name</dt>
+  <dd>
+    {{ parsedData().name }}
+    <a
+      href="https://www.starwars.com/databank/{{ normalizedName() }}"
+      target="_blank"
+      class="-cl-link"
+    >
+      <i class="material-symbols-outlined">open_in_new</i>
+    </a>
+  </dd>
+
+  <dt class="app-cl-title">Diameter</dt>
+  <dd>
+    <span class="app-cl-number -cl-number-data">{{
+      parsedData().diameter
+    }}</span>
+    km
+  </dd>
+
+  <dt class="app-cl-title">Rotation Period</dt>
+  <dd>
+    <span class="app-cl-number -cl-number-data">{{
+      parsedData().rotation_period
+    }}</span>
+    hours
+  </dd>
+
+  <dt class="app-cl-title">Orbital Period</dt>
+  <dd>
+    <span class="app-cl-number -cl-number-data">{{
+      parsedData().orbital_period
+    }}</span>
+    days
+  </dd>
+
+  <dt class="app-cl-title">Population</dt>
+  <dd>
+    <span class="app-cl-number -cl-number-data">{{
+      parsedData().population
+    }}</span>
+    people
+  </dd>
+
+  <dt class="app-cl-title">Surface Water</dt>
+  <dd>
+    <span class="app-cl-number -cl-number-data">{{
+      parsedData().surface_water
+    }}</span>
+    %
+  </dd>
+
+  <dt class="app-cl-title">Gravity</dt>
+  <dd>{{ parsedData().gravity }}</dd>
+
+  <dt class="app-cl-title">Climate</dt>
+  <dd>{{ parsedData().climate }}</dd>
+
+  <dt class="app-cl-title">Terrain</dt>
+  <dd>{{ parsedData().terrain }}</dd>
+
+  <dt class="app-cl-title">Residents</dt>
+  <dd>
+    <ul class="-cl-container">
+      @for (resident of parsedData().residents; track $index) {
+        <li>
+          <ng-container *appSwResource="let $resident of resident()">
+            <a
+              [href]="$resident.url"
+              (click)="$event.preventDefault()"
+              (click)="onLinkClick($resident.url)"
+              class="-cl-link"
+              >{{ $resident.name }}</a
+            >
+          </ng-container>
+        </li>
+      }
+    </ul>
+  </dd>
+
+  <dt class="app-cl-title">Created</dt>
+  <dd>{{ parsedData().created | date: 'medium' }}</dd>
+
+  <dt class="app-cl-title">Edited</dt>
+  <dd>{{ parsedData().edited | date: 'medium' }}</dd>
+</dl>

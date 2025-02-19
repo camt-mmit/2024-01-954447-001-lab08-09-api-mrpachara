@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { SwPersonViewComponent } from '../../../components/people/sw-person-view/sw-person-view.component';
 import { PeopleFetchService } from '../../../services/people-fetch.service';
+import { createSwNavigateFn } from '../../helpers';
 
 @Component({
   selector: 'app-sw-person-view-page',
@@ -21,6 +22,12 @@ export class SwPersonViewPageComponent {
     this.params$.pipe(switchMap(async ({ id }) => await this.service.get(id))),
     { initialValue: undefined },
   );
+
+  private readonly natigate = createSwNavigateFn();
+
+  protected onLinkClick(url: URL): void {
+    this.natigate(url);
+  }
 
   protected back(): void {
     history.back();

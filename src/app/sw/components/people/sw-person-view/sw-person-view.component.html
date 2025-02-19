@@ -5,7 +5,7 @@
     <a
       href="https://www.starwars.com/databank/{{ normalizedName() }}"
       target="_blank"
-      class="-cmp-link"
+      class="-cl-link"
     >
       <i class="material-symbols-outlined">open_in_new</i>
     </a>
@@ -40,17 +40,26 @@
 
   <dt class="app-cl-title">Homeworld</dt>
   <dd>
-    @switch (parsedData().homeworld()) {
-      @case (undefined) {
-        Loading...
-      }
+    <ng-container *appSwResource="let $homeworld of parsedData().homeworld()">
+      {{ $homeworld.name }}
+    </ng-container>
+  </dd>
 
-      @case (null) {
-        -
-      }
-
-      @default {
-        {{ parsedData().homeworld()?.name }}
+  <dt class="app-cl-title">Species</dt>
+  <dd>
+    @if (parsedData().species.length === 0) {
+      -
+    } @else {
+      @for (species of parsedData().species; track $index) {
+        <ng-container *appSwResource="let $species of species()">
+          <a
+            [href]="$species.url"
+            (click)="$event.preventDefault()"
+            (click)="onLinkClick($species.url)"
+            class="-cl-link"
+            >{{ $species.name }}</a
+          >
+        </ng-container>
       }
     }
   </dd>
