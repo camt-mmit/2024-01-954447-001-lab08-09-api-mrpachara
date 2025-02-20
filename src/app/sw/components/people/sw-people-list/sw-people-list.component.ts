@@ -10,10 +10,11 @@ import {
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { parsePeopleList } from '../../../helpers';
 import { Person, ResourcesList, SearchData } from '../../../models';
+import { SwLoadingComponent } from '../../common/sw-loading/sw-loading.component';
 
 @Component({
   selector: 'app-sw-people-list',
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, SwLoadingComponent],
   templateUrl: './sw-people-list.component.html',
   styleUrl: './sw-people-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

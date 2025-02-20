@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,6 +6,7 @@ import {
   input,
   output,
 } from '@angular/core';
+import { SwNumberDirective } from '../../../directives/sw-number.directive';
 import { SwResourceDirective } from '../../../directives/sw-resource.directive';
 import {
   parsePerson,
@@ -18,7 +19,7 @@ import { Species } from '../../../models';
 
 @Component({
   selector: 'app-sw-species-view',
-  imports: [DatePipe, SwResourceDirective],
+  imports: [DatePipe, DecimalPipe, SwResourceDirective, SwNumberDirective],
   templateUrl: './sw-species-view.component.html',
   styleUrl: './sw-species-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

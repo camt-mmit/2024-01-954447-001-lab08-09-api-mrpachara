@@ -28,21 +28,30 @@
 
   <dt class="app-cl-title">Height</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{ parsedData().height }}</span>
-    cm
+    <ng-container *appSwNumber="let value of parsedData().height">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      cm
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Mass</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{ parsedData().mass }}</span>
-    kg
+    <ng-container *appSwNumber="let value of parsedData().mass">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      kg
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Homeworld</dt>
   <dd>
-    <ng-container *appSwResource="let $homeworld of parsedData().homeworld()">
-      {{ $homeworld.name }}
-    </ng-container>
+    <a
+      *appSwResource="let $homeworld of parsedData().homeworld()"
+      [href]="$homeworld.url"
+      (click)="$event.preventDefault()"
+      (click)="onLinkClick($homeworld.url)"
+      class="-cl-link"
+      >{{ $homeworld.name }}</a
+    >
   </dd>
 
   <dt class="app-cl-title">Species</dt>
@@ -51,15 +60,14 @@
       -
     } @else {
       @for (species of parsedData().species; track $index) {
-        <ng-container *appSwResource="let $species of species()">
-          <a
-            [href]="$species.url"
-            (click)="$event.preventDefault()"
-            (click)="onLinkClick($species.url)"
-            class="-cl-link"
-            >{{ $species.name }}</a
-          >
-        </ng-container>
+        <a
+          *appSwResource="let $species of species()"
+          [href]="$species.url"
+          (click)="$event.preventDefault()"
+          (click)="onLinkClick($species.url)"
+          class="-cl-link"
+          >{{ $species.name }}</a
+        >
       }
     }
   </dd>

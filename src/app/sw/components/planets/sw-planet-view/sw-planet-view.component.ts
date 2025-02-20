@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,6 +6,7 @@ import {
   input,
   output,
 } from '@angular/core';
+import { SwNumberDirective } from '../../../directives/sw-number.directive';
 import { SwResourceDirective } from '../../../directives/sw-resource.directive';
 import {
   parsePerson,
@@ -17,7 +18,7 @@ import { Planet } from '../../../models';
 
 @Component({
   selector: 'app-sw-planet-view',
-  imports: [DatePipe, SwResourceDirective],
+  imports: [DatePipe, DecimalPipe, SwResourceDirective, SwNumberDirective],
   templateUrl: './sw-planet-view.component.html',
   styleUrl: './sw-planet-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -7,6 +7,6 @@
   @if (data(); as data) {
     <app-sw-person-view [data]="data" (linkClick)="onLinkClick($event)" />
   } @else {
-    <p>Loading...</p>
+    <app-sw-loading />
   }
 </div>

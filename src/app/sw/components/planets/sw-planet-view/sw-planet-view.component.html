@@ -13,42 +13,42 @@
 
   <dt class="app-cl-title">Diameter</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{
-      parsedData().diameter
-    }}</span>
-    km
+    <ng-container *appSwNumber="let value of parsedData().diameter">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      km
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Rotation Period</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{
-      parsedData().rotation_period
-    }}</span>
-    hours
+    <ng-container *appSwNumber="let value of parsedData().rotation_period">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      hours
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Orbital Period</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{
-      parsedData().orbital_period
-    }}</span>
-    days
+    <ng-container *appSwNumber="let value of parsedData().orbital_period">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      days
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Population</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{
-      parsedData().population
-    }}</span>
-    people
+    <ng-container *appSwNumber="let value of parsedData().population">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      people
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Surface Water</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{
-      parsedData().surface_water
-    }}</span>
-    %
+    <ng-container *appSwNumber="let value of parsedData().surface_water">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      %
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Gravity</dt>
@@ -65,15 +65,14 @@
     <ul class="-cl-container">
       @for (resident of parsedData().residents; track $index) {
         <li>
-          <ng-container *appSwResource="let $resident of resident()">
-            <a
-              [href]="$resident.url"
-              (click)="$event.preventDefault()"
-              (click)="onLinkClick($resident.url)"
-              class="-cl-link"
-              >{{ $resident.name }}</a
-            >
-          </ng-container>
+          <a
+            *appSwResource="let $resident of resident()"
+            [href]="$resident.url"
+            (click)="$event.preventDefault()"
+            (click)="onLinkClick($resident.url)"
+            class="-cl-link"
+            >{{ $resident.name }}</a
+          >
         </li>
       }
     </ul>

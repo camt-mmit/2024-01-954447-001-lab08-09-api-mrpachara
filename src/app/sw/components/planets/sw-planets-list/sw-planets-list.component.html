@@ -8,7 +8,7 @@
   </button>
 </form>
 @if (isLoading()) {
-  <p>Loading...</p>
+  <app-sw-loading />
 }
 <div [ngClass]="{ '-cl-hidden': isLoading() }">
   @if (parsedData(); as parsedData) {
@@ -36,14 +36,20 @@
           <button type="button" (click)="select(item.id)" class="-cmp-resource">
             <h3 class="-cl-title">{{ item.name }}</h3>
             <b class="-cl-meta"
-              >[<span title="diameter" class="app-cl-number">{{
-                item.diameter
-              }}</span>
-              km] (👪<span
-                title="residents"
-                class="app-cl-number -cl-number-data"
-                >{{ item.residents.length }}</span
-              >)</b
+              ><span title="diameter"
+                >[
+                <span
+                  *appSwNumber="let value of item.diameter"
+                  class="app-cl-number"
+                  >{{ value | number }} km</span
+                >]</span
+              >
+              <span title="residents"
+                >(👪<span class="app-cl-number -cl-number-data">{{
+                  item.residents.length
+                }}</span
+                >)</span
+              ></b
             >
           </button>
         }

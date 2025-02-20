@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { DecimalPipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,12 +8,20 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { SwNumberDirective } from '../../../directives/sw-number.directive';
 import { parsePlanetsList } from '../../../helpers';
 import { Planet, ResourcesList, SearchData } from '../../../models';
+import { SwLoadingComponent } from '../../common/sw-loading/sw-loading.component';
 
 @Component({
   selector: 'app-sw-planets-list',
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [
+    ReactiveFormsModule,
+    NgClass,
+    DecimalPipe,
+    SwLoadingComponent,
+    SwNumberDirective,
+  ],
   templateUrl: './sw-planets-list.component.html',
   styleUrl: './sw-planets-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

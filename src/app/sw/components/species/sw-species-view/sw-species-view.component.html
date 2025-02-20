@@ -12,36 +12,37 @@
   </dd>
 
   <dt class="app-cl-title">Classification</dt>
-  <dd>
-    {{ parsedData().classification }}
-  </dd>
+  <dd>{{ parsedData().classification }}</dd>
 
   <dt class="app-cl-title">Designation</dt>
-  <dd>
-    <span class="app-cl-code">{{ parsedData().designation }}</span>
-  </dd>
+  <dd>{{ parsedData().designation }}</dd>
 
   <dt class="app-cl-title">Average Height</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{
-      parsedData().average_height
-    }}</span>
-    cm
+    <ng-container *appSwNumber="let value of parsedData().average_height">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      cm
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Average Lifespan</dt>
   <dd>
-    <span class="app-cl-number -cl-number-data">{{
-      parsedData().average_lifespan
-    }}</span>
-    years
+    <ng-container *appSwNumber="let value of parsedData().average_lifespan">
+      <span class="app-cl-number -cl-number-data">{{ value | number }}</span>
+      years
+    </ng-container>
   </dd>
 
   <dt class="app-cl-title">Homeworld</dt>
   <dd>
-    <ng-container *appSwResource="let $homeworld of parsedData().homeworld()">
-      {{ $homeworld.name }}
-    </ng-container>
+    <a
+      *appSwResource="let $homeworld of parsedData().homeworld()"
+      [href]="$homeworld.url"
+      (click)="$event.preventDefault()"
+      (click)="onLinkClick($homeworld.url)"
+      class="-cl-link"
+      >{{ $homeworld.name }}</a
+    >
   </dd>
 
   <dt class="app-cl-title">Species</dt>
@@ -49,15 +50,14 @@
     <ul class="-cl-container">
       @for (person of parsedData().people; track $index) {
         <li>
-          <ng-container *appSwResource="let $person of person()">
-            <a
-              [href]="$person.url"
-              (click)="$event.preventDefault()"
-              (click)="onLinkClick($person.url)"
-              class="-cl-link"
-              >{{ $person.name }}</a
-            >
-          </ng-container>
+          <a
+            *appSwResource="let $person of person()"
+            [href]="$person.url"
+            (click)="$event.preventDefault()"
+            (click)="onLinkClick($person.url)"
+            class="-cl-link"
+            >{{ $person.name }}</a
+          >
         </li>
       }
     </ul>

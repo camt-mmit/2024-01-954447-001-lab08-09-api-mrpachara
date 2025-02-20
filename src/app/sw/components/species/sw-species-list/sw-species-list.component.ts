@@ -10,10 +10,11 @@ import {
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { parseSpeciesList } from '../../../helpers';
 import { ResourcesList, SearchData, Species } from '../../../models';
+import { SwLoadingComponent } from '../../common/sw-loading/sw-loading.component';
 
 @Component({
   selector: 'app-sw-species-list',
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, SwLoadingComponent],
   templateUrl: './sw-species-list.component.html',
   styleUrl: './sw-species-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -8,7 +8,7 @@
   </button>
 </form>
 @if (isLoading()) {
-  <p>Loading...</p>
+  <app-sw-loading />
 }
 <div [ngClass]="{ '-cl-hidden': isLoading() }">
   @if (parsedData(); as parsedData) {

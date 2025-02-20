@@ -67,7 +67,7 @@ export function parseResource(resource: Resource) {
   } as const;
 }
 
-export function parseResourcesList<T extends Resource>(
+function parseGenericResourcesList<T extends Resource>(
   resourcesList: ResourcesList<T>,
 ) {
   const { previous, next } = resourcesList;
@@ -76,6 +76,15 @@ export function parseResourcesList<T extends Resource>(
     ...resourcesList,
     previous: previous !== null ? new URL(previous) : null,
     next: next !== null ? new URL(next) : null,
+  } as const;
+}
+
+export function parseResourcesList(resourcesList: ResourcesList<Resource>) {
+  const { results } = resourcesList;
+
+  return {
+    ...parseGenericResourcesList(resourcesList),
+    results: readonlyArray(results.map(parseResource)),
   } as const;
 }
 
@@ -97,14 +106,11 @@ export function parsePerson(resource: Person) {
   } as const;
 }
 
-export function parsePeopleList<T extends Person>(
-  resourcesList: ResourcesList<T>,
-) {
-  const parsedResourcesList = parseResourcesList(resourcesList);
-  const { results } = parsedResourcesList;
+export function parsePeopleList(resourcesList: ResourcesList<Person>) {
+  const { results } = resourcesList;
 
   return {
-    ...parsedResourcesList,
+    ...parseGenericResourcesList(resourcesList),
     results: readonlyArray(results.map(parsePerson)),
   } as const;
 }
@@ -121,15 +127,12 @@ export function parseSpecies(resource: Species) {
   } as const;
 }
 
-export function parseSpeciesList<T extends Species>(
-  resourcesList: ResourcesList<T>,
-) {
-  const parsedResourcesList = parseResourcesList(resourcesList);
-  const { results } = parsedResourcesList;
+export function parseSpeciesList(resourcesList: ResourcesList<Species>) {
+  const { results } = resourcesList;
 
   return {
-    ...parsedResourcesList,
-    results: readonlyArray(results.map((result) => parseSpecies(result))),
+    ...parseGenericResourcesList(resourcesList),
+    results: readonlyArray(results.map(parseSpecies)),
   } as const;
 }
 
@@ -144,14 +147,11 @@ export function parsePlanet(resource: Planet) {
   } as const;
 }
 
-export function parsePlanetsList<T extends Planet>(
-  resourcesList: ResourcesList<T>,
-) {
-  const parsedResourcesList = parseResourcesList(resourcesList);
-  const { results } = parsedResourcesList;
+export function parsePlanetsList(resourcesList: ResourcesList<Planet>) {
+  const { results } = resourcesList;
 
   return {
-    ...parsedResourcesList,
-    results: readonlyArray(results.map((result) => parsePlanet(result))),
+    ...parseGenericResourcesList(resourcesList),
+    results: readonlyArray(results.map(parsePlanet)),
   } as const;
 }

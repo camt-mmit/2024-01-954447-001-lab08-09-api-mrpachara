@@ -1,5 +1,4 @@
 import {
-  Component,
   Directive,
   effect,
   inject,
@@ -7,24 +6,12 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-
-@Component({
-  selector: 'app-sw-resource-loading',
-  template: `Loading...`,
-})
-class LoadingComponent {}
-
-@Component({
-  selector: 'app-sw-resource-null',
-  template: `-`,
-})
-class NullComponent {}
+import { SwLoadingComponent } from '../components/common/sw-loading/sw-loading.component';
+import { SwMessageTemplate } from '../tokens';
 
 interface SwResourceTemplateContext<T> {
   $implicit: NonNullable<T>;
 }
-
-const loadingDelay = 500;
 
 @Directive({
   selector: '[appSwResource]',
@@ -41,31 +28,32 @@ export class SwResourceDirective<T> {
   }
 
   readonly appSwResourceOf = input.required<T>();
-
-  private readonly templateRef =
-    inject<TemplateRef<SwResourceTemplateContext<T>>>(TemplateRef);
-
-  private readonly viewContainerRef = inject(ViewContainerRef);
+  readonly appSwResourceNullValue = input('-');
 
   constructor() {
+    const templateRef =
+      inject<TemplateRef<SwResourceTemplateContext<T>>>(TemplateRef);
+    const viewContainerRef = inject(ViewContainerRef);
+    const swMessageTemplate = inject(SwMessageTemplate);
+
     effect((onDestroy) => {
       const resource = this.appSwResourceOf();
 
-      this.viewContainerRef.clear();
+      viewContainerRef.clear();
 
       if (typeof resource === 'undefined') {
-        const handler = setTimeout(
-          () => this.viewContainerRef.createComponent(LoadingComponent),
-          loadingDelay,
-        );
-
-        onDestroy(() => clearTimeout(handler));
+        const ref = viewContainerRef.createComponent(SwLoadingComponent);
+        onDestroy(() => ref.destroy());
       } else if (resource === null) {
-        this.viewContainerRef.createComponent(NullComponent);
+        const ref = viewContainerRef.createEmbeddedView(swMessageTemplate(), {
+          $implicit: this.appSwResourceNullValue(),
+        });
+        onDestroy(() => ref.destroy());
       } else {
-        this.viewContainerRef.createEmbeddedView(this.templateRef, {
+        const ref = viewContainerRef.createEmbeddedView(templateRef, {
           $implicit: resource,
         });
+        onDestroy(() => ref.destroy());
       }
     });
   }
