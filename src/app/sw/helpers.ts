@@ -57,10 +57,15 @@ export function resourceSignal<T, R>(
 
 export function parseResource(resource: Resource) {
   const { created, edited, url } = resource;
+  const id = `swapi:${url
+    .slice(apiUrl.length)
+    .split('/')
+    .filter((path) => !!path)
+    .join('/')}`;
 
   return {
     ...resource,
-    id: url,
+    id,
     created: new Date(created),
     edited: new Date(edited),
     url: new URL(url),

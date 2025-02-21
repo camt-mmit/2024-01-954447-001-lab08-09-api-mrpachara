@@ -27,7 +27,7 @@ import { Species } from '../../../models';
 export class SwSpeciesViewComponent {
   readonly data = input.required<Species>();
 
-  readonly linkClick = output<URL>();
+  readonly linkClick = output<string>();
 
   readonly parsedData = computed(() => {
     const { homeworld, people, ...rest } = parseSpecies(this.data());
@@ -47,9 +47,9 @@ export class SwSpeciesViewComponent {
       .toLocaleLowerCase(),
   );
 
-  protected onLinkClick(url: URL | undefined): void {
-    if (url) {
-      this.linkClick.emit(url);
+  protected onLinkClick(id: string | undefined): void {
+    if (id) {
+      this.linkClick.emit(id);
     }
   }
 }

@@ -67,9 +67,9 @@
         <li>
           <a
             *appSwResource="let $resident of resident()"
-            [href]="$resident.url"
+            [href]="$resident.id"
             (click)="$event.preventDefault()"
-            (click)="onLinkClick($resident.url)"
+            (click)="onLinkClick($resident.id)"
             class="-cl-link"
             >{{ $resident.name }}</a
           >

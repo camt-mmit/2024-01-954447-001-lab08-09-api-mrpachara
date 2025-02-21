@@ -60,11 +60,13 @@ export class SwNumberDirective {
         const ref = viewContainerRef.createEmbeddedView(templateRef, {
           $implicit: this.numberValue(),
         });
+        ref.detectChanges();
         onDestroy(() => ref.destroy());
       } else {
         const ref = viewContainerRef.createEmbeddedView(swMessageTemplate(), {
           $implicit: this.stringValue(),
         });
+        ref.detectChanges();
         onDestroy(() => ref.destroy());
       }
     });

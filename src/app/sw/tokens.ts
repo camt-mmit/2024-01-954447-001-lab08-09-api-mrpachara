@@ -30,6 +30,9 @@ export const SwMessageTemplate = new InjectionToken<
       environmentInjector: inject(EnvironmentInjector),
     });
 
+    // NOTE: call detectChanges() after setInput() for executing effect().
+    compRef.changeDetectorRef.detectChanges();
+
     return compRef.instance.templateRef;
 
     inject(DestroyRef).onDestroy(() => compRef.destroy());

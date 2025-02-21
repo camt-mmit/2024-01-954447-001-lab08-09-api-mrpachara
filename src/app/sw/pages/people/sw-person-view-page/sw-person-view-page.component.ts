@@ -26,8 +26,8 @@ export class SwPersonViewPageComponent {
 
   private readonly natigate = createSwNavigateFn();
 
-  protected onLinkClick(url: URL): void {
-    this.natigate(url);
+  protected onLinkClick(id: string): void {
+    this.natigate(id);
   }
 
   protected back(): void {

@@ -27,7 +27,7 @@ import { Person } from '../../../models';
 export class SwPersonViewComponent {
   readonly data = input.required<Person>();
 
-  readonly linkClick = output<URL>();
+  readonly linkClick = output<string>();
 
   readonly parsedData = computed(() => {
     const { homeworld, species, ...rest } = parsePerson(this.data());
@@ -47,9 +47,9 @@ export class SwPersonViewComponent {
       .toLocaleLowerCase(),
   );
 
-  protected onLinkClick(url: URL | undefined): void {
-    if (url) {
-      this.linkClick.emit(url);
+  protected onLinkClick(id: string | undefined): void {
+    if (id) {
+      this.linkClick.emit(id);
     }
   }
 }

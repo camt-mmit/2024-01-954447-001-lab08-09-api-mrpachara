@@ -36,7 +36,7 @@ export class SwSpeciesListPageComponent {
 
   private readonly natigate = createSwNavigateFn();
 
-  protected onSelect(url: string): void {
-    this.natigate(new URL(url));
+  protected onSelect(id: string): void {
+    this.natigate(id);
   }
 }

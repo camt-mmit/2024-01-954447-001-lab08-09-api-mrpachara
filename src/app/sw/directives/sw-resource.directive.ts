@@ -43,16 +43,19 @@ export class SwResourceDirective<T> {
 
       if (typeof resource === 'undefined') {
         const ref = viewContainerRef.createComponent(SwLoadingComponent);
+        ref.changeDetectorRef.detectChanges();
         onDestroy(() => ref.destroy());
       } else if (resource === null) {
         const ref = viewContainerRef.createEmbeddedView(swMessageTemplate(), {
           $implicit: this.appSwResourceNullValue(),
         });
+        ref.detectChanges();
         onDestroy(() => ref.destroy());
       } else {
         const ref = viewContainerRef.createEmbeddedView(templateRef, {
           $implicit: resource,
         });
+        ref.detectChanges();
         onDestroy(() => ref.destroy());
       }
     });

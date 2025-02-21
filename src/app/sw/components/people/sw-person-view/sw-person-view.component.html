@@ -46,9 +46,9 @@
   <dd>
     <a
       *appSwResource="let $homeworld of parsedData().homeworld()"
-      [href]="$homeworld.url"
+      [href]="$homeworld.id"
       (click)="$event.preventDefault()"
-      (click)="onLinkClick($homeworld.url)"
+      (click)="onLinkClick($homeworld.id)"
       class="-cl-link"
       >{{ $homeworld.name }}</a
     >
@@ -62,9 +62,9 @@
       @for (species of parsedData().species; track $index) {
         <a
           *appSwResource="let $species of species()"
-          [href]="$species.url"
+          [href]="$species.id"
           (click)="$event.preventDefault()"
-          (click)="onLinkClick($species.url)"
+          (click)="onLinkClick($species.id)"
           class="-cl-link"
           >{{ $species.name }}</a
         >

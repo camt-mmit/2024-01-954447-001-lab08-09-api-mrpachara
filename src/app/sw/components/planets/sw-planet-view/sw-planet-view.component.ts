@@ -26,7 +26,7 @@ import { Planet } from '../../../models';
 export class SwPlanetViewComponent {
   readonly data = input.required<Planet>();
 
-  readonly linkClick = output<URL>();
+  readonly linkClick = output<string>();
 
   readonly parsedData = computed(() => {
     const { residents, ...rest } = parsePlanet(this.data());
@@ -45,9 +45,9 @@ export class SwPlanetViewComponent {
       .toLocaleLowerCase(),
   );
 
-  protected onLinkClick(url: URL | undefined): void {
-    if (url) {
-      this.linkClick.emit(url);
+  protected onLinkClick(id: string | undefined): void {
+    if (id) {
+      this.linkClick.emit(id);
     }
   }
 }

@@ -5,7 +5,7 @@
   background-clip: text;
 
   animation:
-    shine 1s linear infinite,
+    shine 0.5s linear infinite,
     appear var(---appear-delay, 0s) ease-in forwards;
 }
 

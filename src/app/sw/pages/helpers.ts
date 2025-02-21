@@ -6,14 +6,9 @@ export function createSwNavigateFn() {
   const moduleRootRoute = inject(SwPageComponent).activatedRoute;
   const router = inject(Router);
 
-  return (url: URL) => {
-    const paths = url.pathname.split('/');
-
-    while (paths[paths.length - 1] === '') {
-      paths.pop();
-    }
-
-    const navigates = [paths[paths.length - 2], paths[paths.length - 1]];
+  return (id: string) => {
+    const [, pathnanme] = id.split(':', 2);
+    const navigates = pathnanme.split('/');
 
     router.navigate(navigates, {
       relativeTo: moduleRootRoute,
