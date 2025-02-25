@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { OauthConfiguration } from './models';
 import { GlEventCreatePageComponent } from './pages/events/gl-event-create-page/gl-event-create-page.component';
 import { GlEventsListPageComponent } from './pages/events/gl-events-list-page/gl-events-list-page.component';
-import { GlEventsPageComponent } from './pages/events/gl-events-page/gl-events-page.component';
 import { GlAuthorizationPageComponent } from './pages/gl-authorization-page/gl-authorization-page.component';
 import { GlPageComponent } from './pages/gl-page/gl-page.component';
 import { EventsService } from './services/events.service';
@@ -26,7 +25,6 @@ export default [
       },
 
       OauthService,
-      EventsService,
     ],
     children: [
       { path: 'authorization', component: GlAuthorizationPageComponent },
@@ -39,7 +37,7 @@ export default [
 
           {
             path: 'events',
-            component: GlEventsPageComponent,
+            providers: [EventsService],
             children: [
               { path: '', component: GlEventsListPageComponent },
               { path: 'create', component: GlEventCreatePageComponent },

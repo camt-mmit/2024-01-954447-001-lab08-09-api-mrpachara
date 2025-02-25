@@ -36,8 +36,11 @@ export class OauthService {
   private readonly storedAccessTokenDataKey =
     `oauth-${this.config.name}-access-token` as const;
 
-  private readonly storaedRefreshTokenDataKey =
+  private readonly storedRefreshTokenDataKey =
     `oauth-${this.config.name}-refresh-token` as const;
+
+  private readonly storedIdTokenDataKey =
+    `oauth-${this.config.name}-id-token` as const;
 
   private readonly readyResource = resource({
     loader: async () => {
@@ -52,13 +55,17 @@ export class OauthService {
   private async storeAccessTokenData(
     accessTokenData: AccessTokenData,
   ): Promise<StoredAccessTokenData> {
-    const { refresh_token, ...restAccessTokenData } = accessTokenData;
+    const { refresh_token, id_token, ...restAccessTokenData } = accessTokenData;
 
     if (refresh_token) {
       await this.storage.set<string>(
-        this.storaedRefreshTokenDataKey,
+        this.storedRefreshTokenDataKey,
         refresh_token,
       );
+    }
+
+    if (id_token) {
+      await this.storage.set<string>(this.storedIdTokenDataKey, id_token);
     }
 
     const storedAccessTokenData = {
@@ -76,7 +83,7 @@ export class OauthService {
 
   private async refreshAccessTokenData(): Promise<StoredAccessTokenData | null> {
     const refreshToken = await this.storage.get<string>(
-      this.storaedRefreshTokenDataKey,
+      this.storedRefreshTokenDataKey,
     );
 
     if (refreshToken) {
@@ -295,10 +302,23 @@ export class OauthService {
     return stateData.state;
   }
 
+  async parseIdToken<T>(): Promise<T | null> {
+    const idToken = await this.storage.get<string>(this.storedIdTokenDataKey);
+
+    if (idToken === null) {
+      return null;
+    }
+
+    const [, body] = idToken.split('.');
+
+    return JSON.parse(atob(body));
+  }
+
   async clear(): Promise<void> {
     await Promise.all([
       this.storage.remove(this.storedAccessTokenDataKey),
-      this.storage.remove(this.storaedRefreshTokenDataKey),
+      this.storage.remove(this.storedRefreshTokenDataKey),
+      this.storage.remove(this.storedIdTokenDataKey),
       this.storage.remove(this.storedStateDataKey),
     ]);
 

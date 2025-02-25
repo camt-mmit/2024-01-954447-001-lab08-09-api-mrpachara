@@ -15,12 +15,13 @@ export interface AccessTokenData {
   readonly access_token: string;
   readonly expires_in: number; // seconds
   readonly refresh_token?: string;
+  readonly id_token?: string;
   readonly token_type: string;
   readonly scope: string;
 }
 
 export interface StoredAccessTokenData
-  extends Omit<AccessTokenData, 'refresh_token'>,
+  extends Omit<AccessTokenData, 'refresh_token' | 'id_token'>,
     StoredData {}
 
 export interface StateData<T extends object = object> {

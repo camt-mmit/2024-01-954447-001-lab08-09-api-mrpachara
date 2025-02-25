@@ -1,11 +1,11 @@
-import { date, datetime, etag, integer } from './common';
+import { date, datetime, etag, integer, RequiredProperties } from './common';
 
 export interface EventDateAllDay {
-  readonly date?: date;
+  readonly date: date;
 }
 
 export interface EventDateTime {
-  readonly dateTime?: datetime;
+  readonly dateTime: datetime;
   readonly timeZone?: string;
 }
 
@@ -152,7 +152,7 @@ export interface EventsList {
   readonly items?: readonly EventResource[];
 }
 
-export interface EventQueryParams {
+export interface EventsQueryParams {
   /**
    * Event types to return. Optional. This parameter can be repeated multiple times to return events of different types. If unset, returns all event types.
    */
@@ -245,3 +245,8 @@ export interface EventQueryParams {
    */
   readonly updatedMin?: datetime;
 }
+
+export type EventResourceInsertBody = RequiredProperties<
+  Omit<EventResource, 'kind' | 'etag' | 'id'>,
+  'start' | 'end'
+>;

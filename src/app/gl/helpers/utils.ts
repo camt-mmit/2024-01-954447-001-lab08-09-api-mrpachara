@@ -1,67 +1,91 @@
 import { EmailAddress, HasMetadata, Name, PhoneNumber, Photo } from '../models';
-import { isEventDateTime, parseEventResource } from './events';
+import {
+  isEventDateAllDay,
+  isEventDateTime,
+  parseEventDate,
+  parseEventResource,
+} from './events';
 
 /**
  * Helper Functions
  */
 
+export function getEventDateDateTime(
+  eventDate: ReturnType<typeof parseEventDate>,
+): {
+  date: string;
+  time: string | null;
+} {
+  const [date, time] = (
+    isEventDateTime(eventDate) ?
+      eventDate.dateTime
+    : eventDate.date)
+    .toISOString()
+    .split('T');
+
+  return { date, time: isEventDateAllDay(eventDate) ? null : time };
+}
+
+export function getEventDateString(
+  eventDate: ReturnType<typeof parseEventDate>,
+): string {
+  if (isEventDateTime(eventDate)) {
+    const { dateTime } = eventDate;
+
+    return dateTime.toLocaleString(undefined, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+  } else {
+    const { date } = eventDate;
+
+    return date.toLocaleDateString(undefined, {
+      dateStyle: 'medium',
+    });
+  }
+}
+
+export function getEventDateDateString(
+  eventDate: ReturnType<typeof parseEventDate>,
+): string {
+  const date = isEventDateTime(eventDate) ? eventDate.dateTime : eventDate.date;
+
+  return date.toLocaleDateString(undefined, { dateStyle: 'medium' });
+}
+
+export function getEventDateTimeString(
+  eventDate: ReturnType<typeof parseEventDate>,
+): string {
+  const date = isEventDateTime(eventDate) ? eventDate.dateTime : eventDate.date;
+
+  return date.toLocaleTimeString(undefined, { timeStyle: 'short' });
+}
+
 export function displayEventTimeRange(
   eventResource: ReturnType<typeof parseEventResource>,
 ): string {
-  const start =
-    isEventDateTime(eventResource.start) ?
-      eventResource.start?.dateTime
-    : eventResource.start?.date;
-  const end =
-    isEventDateTime(eventResource.end) ?
-      eventResource.end?.dateTime
-    : eventResource.end?.date;
-
-  let result = '';
+  const { start, end } = eventResource;
 
   if (start && end) {
-    if (start instanceof Date && end instanceof Date) {
-      const startString = start.toLocaleString(undefined, {
-        dateStyle: 'short',
-        timeStyle: 'short',
-      });
+    const startDateTime = getEventDateDateTime(start);
+    const endDateTime = getEventDateDateTime(end);
 
-      const startDate = start.toLocaleDateString(undefined, {
-        dateStyle: 'short',
-      });
-      const endDate = end.toLocaleDateString(undefined, {
-        dateStyle: 'short',
-      });
-
-      if (startDate === endDate) {
-        const startTime = start.toLocaleTimeString(undefined, {
-          timeStyle: 'short',
-        });
-        const endTime = end.toLocaleTimeString(undefined, {
-          timeStyle: 'short',
-        });
-
-        result = `${startDate} ${startTime} - ${endTime}`;
+    if (startDateTime.date === endDateTime.date) {
+      if (startDateTime.time === endDateTime.time) {
+        return getEventDateString(start);
       } else {
-        const endString = end.toLocaleString(undefined, {
-          dateStyle: 'short',
-          timeStyle: 'short',
-        });
-
-        result = `${startString} to ${endString}`;
+        return `${getEventDateString(start)} - ${getEventDateTimeString(end)}`;
       }
     } else {
-      result = `${start} to ${end}`;
+      return `${getEventDateString(start)} to ${getEventDateString(end)}`;
     }
   } else if (start) {
-    result = `${start}`;
+    return getEventDateString(start);
   } else if (end) {
-    result = `${end}`;
+    return getEventDateString(end);
   } else {
-    result = 'Unkonwn';
+    return 'Unknown';
   }
-
-  return result;
 }
 
 export function getPrimaryMetadata<T extends HasMetadata>(

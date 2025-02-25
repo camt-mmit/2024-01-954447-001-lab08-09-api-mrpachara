@@ -1,17 +1,19 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  inject,
   input,
   linkedSignal,
+  output,
 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
   displayEventTimeRange,
   parseEventsList,
   readonlyArray,
 } from '../../../helpers';
-import { EventsList } from '../../../models';
+import { EventsList, EventsQueryParams } from '../../../models';
 import { GlLoadingComponent } from '../../common/gl-loading/gl-loading.component';
 
 function parseData(data: EventsList) {
@@ -31,20 +33,25 @@ function parseData(data: EventsList) {
 
 @Component({
   selector: 'app-gl-events-list',
-  imports: [ReactiveFormsModule, NgClass, GlLoadingComponent],
+  imports: [ReactiveFormsModule, GlLoadingComponent],
   templateUrl: './gl-events-list.component.html',
   styleUrl: './gl-events-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GlEventsListComponent {
   readonly data = input.required<EventsList | undefined>();
+  readonly queryParams = input<EventsQueryParams>({});
   readonly isLoading = input(false);
+
+  readonly queryParamsChange = output<EventsQueryParams>();
+  readonly reload = output<void>();
 
   protected readonly parsedData = linkedSignal<
     EventsList | undefined,
     ReturnType<typeof parseData> | undefined
   >({
     source: this.data,
+
     computation: (source, previous) => {
       if (typeof source === 'undefined') {
         return previous ? previous.value : undefined;
@@ -53,4 +60,22 @@ export class GlEventsListComponent {
       }
     },
   }).asReadonly();
+
+  private readonly fb = inject(FormBuilder).nonNullable;
+
+  protected readonly formGroup = computed(() =>
+    this.fb.group({
+      q: this.fb.control(this.queryParams().q ?? '', {
+        updateOn: 'submit',
+      }),
+    }),
+  );
+
+  protected onSubmit(): void {
+    this.queryParamsChange.emit(this.formGroup().getRawValue());
+  }
+
+  protected clear(): void {
+    this.queryParamsChange.emit({});
+  }
 }

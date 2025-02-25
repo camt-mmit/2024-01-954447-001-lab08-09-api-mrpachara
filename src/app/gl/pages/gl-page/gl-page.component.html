@@ -13,18 +13,20 @@
         class="app-cl-button app-cl-primary"
       >
         <i class="material-symbols-outlined">login</i>
-        Login
+        Login to Google
       </button>
     }
 
     @default {
+      <b>{{ nameResource.value() }}</b>
+
       <button
         type="button"
         (click)="logout()"
         class="app-cl-button app-cl-warn"
       >
         <i class="material-symbols-outlined">logout</i>
-        Logout
+        Remove Token
       </button>
     }
   }

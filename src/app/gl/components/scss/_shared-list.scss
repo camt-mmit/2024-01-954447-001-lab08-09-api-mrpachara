@@ -3,10 +3,6 @@
   display: block;
 }
 
-.app-cl-button {
-  cursor: pointer;
-}
-
 .-cl-hidden {
   display: none !important;
 }
@@ -45,10 +41,20 @@
   }
 }
 
-.-cmp-pagination {
+.-cmp-actions-bar {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  column-gap: 8px;
+  align-items: center;
+
+  & > .-cl-actions-group {
+    display: flex;
+    flex-direction: row;
+  }
+
+  & > .-cl-meta {
+    margin-left: auto;
+  }
 }
 
 .-cmp-resoures-list {

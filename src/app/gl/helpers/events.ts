@@ -32,13 +32,15 @@ export function parseEventDate(data: EventDate) {
 
     return {
       ...rest,
-      ...(() =>
-        dateTime ?
-          ({ dateTime: new Date(dateTime) } as const)
-        : ({} as { readonly dateTime?: Date }))(),
+      dateTime: new Date(dateTime),
     } as const;
   } else {
-    return { ...data } as const;
+    const { date, ...rest } = data;
+
+    return {
+      ...rest,
+      date: new Date(`${date}T00:00:00`),
+    } as const;
   }
 }
 

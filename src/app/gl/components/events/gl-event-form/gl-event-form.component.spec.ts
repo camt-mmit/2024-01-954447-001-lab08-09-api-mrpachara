@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GlEventsPageComponent } from './gl-events-page.component';
+import { GlEventFormComponent } from './gl-event-form.component';
 
-describe('GlEventsPageComponent', () => {
-  let component: GlEventsPageComponent;
-  let fixture: ComponentFixture<GlEventsPageComponent>;
+describe('GlEventFormComponent', () => {
+  let component: GlEventFormComponent;
+  let fixture: ComponentFixture<GlEventFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GlEventsPageComponent]
+      imports: [GlEventFormComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GlEventsPageComponent);
+    fixture = TestBed.createComponent(GlEventFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

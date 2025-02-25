@@ -25,7 +25,8 @@ body {
   background-color: var(--app-background-color);
 }
 
-button {
+button,
+input {
   font-family: inherit;
   font-size: inherit;
 }
@@ -98,15 +99,18 @@ button {
 }
 
 .app-cl-button {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   column-gap: 4px;
   align-items: center;
 
   font-weight: bold;
 
+  cursor: pointer;
+
   &:disabled {
     opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
