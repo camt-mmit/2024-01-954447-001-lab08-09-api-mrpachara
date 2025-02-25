@@ -1,10 +1,11 @@
-import { DecimalPipe, NgClass } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
   input,
+  linkedSignal,
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +18,6 @@ import { SwLoadingComponent } from '../../common/sw-loading/sw-loading.component
   selector: 'app-sw-planets-list',
   imports: [
     ReactiveFormsModule,
-    NgClass,
     DecimalPipe,
     SwLoadingComponent,
     SwNumberDirective,
@@ -34,9 +34,19 @@ export class SwPlanetsListComponent {
   readonly searchDataChange = output<SearchData>();
   readonly itemSelect = output<string>();
 
-  protected readonly parsedData = computed(() =>
-    this.data() ? parsePlanetsList(this.data()!) : undefined,
-  );
+  protected readonly parsedData = linkedSignal<
+    ResourcesList<Planet> | undefined,
+    ReturnType<typeof parsePlanetsList> | undefined
+  >({
+    source: this.data,
+    computation: (source, previous) => {
+      if (typeof source === 'undefined') {
+        return previous ? previous.value : undefined;
+      } else {
+        return parsePlanetsList(source);
+      }
+    },
+  }).asReadonly();
 
   private readonly fb = inject(FormBuilder).nonNullable;
 

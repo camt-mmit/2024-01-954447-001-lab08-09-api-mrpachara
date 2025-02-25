@@ -1,0 +1,30 @@
+@if (isLoading()) {
+  <app-gl-loading />
+}
+<div [ngClass]="{ '-cl-hidden': isLoading() }">
+  @if (parsedData(); as parsedData) {
+    @if (parsedData.items.length > 0) {
+      <div class="-cmp-resoures-list">
+        @for (item of parsedData.items; track item.id) {
+          <section class="-cmp-resource">
+            <details open>
+              <summary>
+                <h3>{{ item.summary }}</h3>
+              </summary>
+              <p>
+                @if (item.description) {
+                  {{ item.description }}
+                } @else {
+                  [<i>No description</i>]
+                }
+              </p>
+            </details>
+            <footer>{{ item.displayDateTime }}</footer>
+          </section>
+        }
+      </div>
+    } @else {
+      <p>Not found!!</p>
+    }
+  }
+</div>

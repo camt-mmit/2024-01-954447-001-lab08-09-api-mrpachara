@@ -1,0 +1,43 @@
+@let ready = oauthService.ready();
+
+<div class="-cmp-actions-bar app-cl-main-content">
+  @switch (ready) {
+    @case (undefined) {
+      <app-gl-loading />
+    }
+
+    @case (false) {
+      <button
+        type="button"
+        (click)="login()"
+        class="app-cl-button app-cl-primary"
+      >
+        <i class="material-symbols-outlined">login</i>
+        Login
+      </button>
+    }
+
+    @default {
+      <button
+        type="button"
+        (click)="logout()"
+        class="app-cl-button app-cl-warn"
+      >
+        <i class="material-symbols-outlined">logout</i>
+        Logout
+      </button>
+    }
+  }
+</div>
+
+@if (ready) {
+  <nav class="app-cmp-links">
+    <ul>
+      <li>
+        <a routerLink="events" routerLinkActive="app-st-active">Events</a>
+      </li>
+    </ul>
+  </nav>
+
+  <router-outlet />
+}

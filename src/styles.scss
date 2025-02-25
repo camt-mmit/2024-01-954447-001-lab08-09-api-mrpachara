@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --app-font: 'Roboto Flex', 'Noto Sans Thai Looped', 'Noto Emoji';
+  --app-font:
+    'Roboto Flex', 'Noto Sans Thai Looped', 'Noto Emoji', 'Noto Color Emoji';
   --app-mono-space-font: 'Roboto Mono';
   --app-font-size: 16px;
 
@@ -105,7 +106,7 @@ button {
   font-weight: bold;
 
   &:disabled {
-    opacity: 0.25;
+    opacity: 0.5;
   }
 }
 

@@ -1,10 +1,10 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
   input,
+  linkedSignal,
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { SwLoadingComponent } from '../../common/sw-loading/sw-loading.component
 
 @Component({
   selector: 'app-sw-people-list',
-  imports: [ReactiveFormsModule, NgClass, SwLoadingComponent],
+  imports: [ReactiveFormsModule, SwLoadingComponent],
   templateUrl: './sw-people-list.component.html',
   styleUrl: './sw-people-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,9 +27,19 @@ export class SwPeopleListComponent {
   readonly searchDataChange = output<SearchData>();
   readonly itemSelect = output<string>();
 
-  protected readonly parsedData = computed(() =>
-    this.data() ? parsePeopleList(this.data()!) : undefined,
-  );
+  protected readonly parsedData = linkedSignal<
+    ResourcesList<Person> | undefined,
+    ReturnType<typeof parsePeopleList> | undefined
+  >({
+    source: this.data,
+    computation: (source, previous) => {
+      if (typeof source === 'undefined') {
+        return previous ? previous.value : undefined;
+      } else {
+        return parsePeopleList(source);
+      }
+    },
+  }).asReadonly();
 
   private readonly fb = inject(FormBuilder).nonNullable;
 

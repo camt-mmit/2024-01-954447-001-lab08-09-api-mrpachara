@@ -45,17 +45,10 @@
   }
 }
 
-.-cmp-actions-bar {
+.-cmp-pagination {
   display: flex;
   flex-direction: row;
-  column-gap: 8px;
-  align-items: center;
-
-  & > .-cmp-pagination {
-    margin-left: auto;
-    display: flex;
-    flex-direction: row;
-  }
+  justify-content: end;
 }
 
 .-cmp-resoures-list {
@@ -68,24 +61,38 @@
 }
 
 .-cmp-resource {
+  box-sizing: border-box;
   display: flex;
-  flex-direction: row;
-  align-items: baseline;
+  flex-direction: column;
 
   padding: 8px 3ch;
 
-  cursor: pointer;
+  border: 1px solid var(--app-primary-color);
+  border-radius: 4px;
 
   & > * {
     margin: 0px;
     padding: 0px;
   }
 
-  & > .-cl-title {
-    font-weight: bold;
+  & > details {
+    & > summary {
+      cursor: pointer;
+
+      & > * {
+        display: inline;
+        margin: 0px;
+        padding: 0px;
+      }
+    }
+
+    & > p {
+      white-space: pre-wrap;
+    }
   }
 
-  & > .-cl-meta {
-    margin-left: auto;
+  & > footer {
+    margin-top: 8px;
+    font-size: smaller;
   }
 }
