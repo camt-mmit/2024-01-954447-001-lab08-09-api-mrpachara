@@ -1,7 +1,12 @@
 <form [formGroup]="formGroup()" (ngSubmit)="onSubmit()" class="-cmp-search-box">
   <label class="-cl-field">
     <b>Search</b>
-    <input type="text" formControlName="q" class="-cl-control" />
+    <input
+      type="text"
+      inputmode="search"
+      formControlName="q"
+      class="-cl-control"
+    />
   </label>
   <button type="button" (click)="clear()" class="app-cl-button app-cl-warn">
     <i class="material-symbols-outlined">close</i>

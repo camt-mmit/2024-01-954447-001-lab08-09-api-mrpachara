@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  resource,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   Router,
   RouterLink,
@@ -33,17 +28,10 @@ export class GlPageComponent {
   protected readonly oauthService = inject(OauthService);
   protected readonly router = inject(Router);
 
-  protected readonly nameResource = resource({
-    request: this.oauthService.ready,
-
-    loader: async () => {
-      const idTokenData = await this.oauthService.parseIdToken<{
-        name: string;
-      }>();
-
-      return idTokenData?.name;
-    },
-  });
+  protected readonly parsedIdToken = this.oauthService.computedParsedIdToken<{
+    name?: string;
+    picture: string;
+  }>();
 
   protected async login(): Promise<void> {
     const authorizationUrl =
@@ -51,6 +39,10 @@ export class GlPageComponent {
         state: {
           intendedUrl: this.router.url,
         },
+
+        // NOTE: The following 2 parameters, prompt and access_type,
+        //       are required for getting the refresh_token.
+        //       prompt=consent&access_type=offline
         additionalParams: {
           prompt: 'consent',
           access_type: 'offline',

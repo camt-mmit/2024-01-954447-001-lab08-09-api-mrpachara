@@ -5,7 +5,6 @@ import {
   computed,
   inject,
   input,
-  linkedSignal,
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -34,19 +33,12 @@ export class SwPlanetsListComponent {
   readonly searchDataChange = output<SearchData>();
   readonly itemSelect = output<string>();
 
-  protected readonly parsedData = linkedSignal<
-    ResourcesList<Planet> | undefined,
-    ReturnType<typeof parsePlanetsList> | undefined
-  >({
-    source: this.data,
-    computation: (source, previous) => {
-      if (typeof source === 'undefined') {
-        return previous ? previous.value : undefined;
-      } else {
-        return parsePlanetsList(source);
-      }
+  protected readonly parsedData = computed(
+    () => (this.data() ? parsePlanetsList(this.data()!) : undefined),
+    {
+      equal: (pre, next) => typeof next === 'undefined' || Object.is(pre, next),
     },
-  }).asReadonly();
+  );
 
   private readonly fb = inject(FormBuilder).nonNullable;
 

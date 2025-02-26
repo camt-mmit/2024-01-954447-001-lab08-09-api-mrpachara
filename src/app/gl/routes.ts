@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 import { OauthConfiguration } from './models';
 import { GlEventCreatePageComponent } from './pages/events/gl-event-create-page/gl-event-create-page.component';
@@ -20,7 +21,10 @@ export default [
           clientSecret: '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',
           authorizationCodeUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
           accessTokenUrl: 'https://oauth2.googleapis.com/token',
-          redirectUri: 'http://localhost:4200/google/authorization',
+          redirectUri:
+            isDevMode() ?
+              'http://localhost:4200/google/authorization'
+            : 'https://camt-mmit.github.io/2024-01-954447-001-lab08-09-api-mrpachara/google/authorization',
         } satisfies OauthConfiguration,
       },
 

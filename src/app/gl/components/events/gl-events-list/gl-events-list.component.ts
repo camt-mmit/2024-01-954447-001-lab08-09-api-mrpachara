@@ -4,7 +4,6 @@ import {
   computed,
   inject,
   input,
-  linkedSignal,
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -46,20 +45,12 @@ export class GlEventsListComponent {
   readonly queryParamsChange = output<EventsQueryParams>();
   readonly reload = output<void>();
 
-  protected readonly parsedData = linkedSignal<
-    EventsList | undefined,
-    ReturnType<typeof parseData> | undefined
-  >({
-    source: this.data,
-
-    computation: (source, previous) => {
-      if (typeof source === 'undefined') {
-        return previous ? previous.value : undefined;
-      } else {
-        return parseData(source);
-      }
+  protected readonly parsedData = computed(
+    () => (this.data() ? parseData(this.data()!) : undefined),
+    {
+      equal: (pre, next) => typeof next === 'undefined' || Object.is(pre, next),
     },
-  }).asReadonly();
+  );
 
   private readonly fb = inject(FormBuilder).nonNullable;
 

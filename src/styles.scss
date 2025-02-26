@@ -149,7 +149,7 @@ input {
   display: flex;
   flex-direction: column;
 
-  & > .app-cl-control {
+  & > .app-cl-field {
     box-sizing: border-box;
 
     display: flex;
@@ -163,7 +163,7 @@ input {
       width: 12ch;
     }
 
-    & > :is(input, textarea) {
+    & > .app-cl-control {
       flex: 1 0 auto;
     }
   }

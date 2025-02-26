@@ -2,13 +2,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
-  linkedSignal,
+  signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs';
 import { OauthService } from '../../services/oauth.service';
 import { GlState } from '../gl-page/gl-page.component';
 
@@ -25,30 +22,25 @@ export class GlAuthorizationPageComponent {
 
   protected readonly oauthService = inject(OauthService);
 
-  private readonly queryParams$ = this.activatedRoute.queryParams;
+  readonly #error = signal(
+    (() => {
+      const error: string | undefined =
+        this.activatedRoute.snapshot.queryParams['error'];
+      const error_description: string | undefined =
+        this.activatedRoute.snapshot.queryParams['error_description'];
 
-  protected readonly code = toSignal(
-    this.queryParams$.pipe(map(({ code }) => code as string)),
+      return error || error_description ?
+          { error, error_description }
+        : undefined;
+    })(),
   );
 
-  protected readonly stateToken = toSignal(
-    this.queryParams$.pipe(map(({ state }) => state as string)),
-  );
-
-  private readonly authorizationError = toSignal(
-    this.queryParams$.pipe(
-      map(({ error, error_description }) =>
-        error || error_description ? { error, error_description } : undefined,
-      ),
-    ),
-  );
-
-  protected readonly error = linkedSignal(() => this.authorizationError());
+  protected readonly error = this.#error.asReadonly();
 
   constructor() {
-    effect(async () => {
-      const code = this.code();
-      const stateToken = this.stateToken();
+    (async () => {
+      const { code, state: stateToken } = this.activatedRoute.snapshot
+        .queryParams as { code?: string; state?: string };
 
       if (code && stateToken) {
         try {
@@ -58,12 +50,14 @@ export class GlAuthorizationPageComponent {
               stateToken,
             );
 
-          this.router.navigateByUrl(state.intendedUrl);
+          this.router.navigateByUrl(state.intendedUrl, {
+            replaceUrl: true,
+          });
         } catch (error) {
           if (error instanceof HttpErrorResponse) {
-            this.error.set(error.error);
+            this.#error.set(error.error);
           } else if (error instanceof Error) {
-            this.error.set({
+            this.#error.set({
               error: error.name,
               error_description: error.message,
             });
@@ -71,7 +65,12 @@ export class GlAuthorizationPageComponent {
 
           throw error;
         }
+      } else {
+        this.#error.set({
+          error: 'bad_response',
+          error_description: `The response doesn't have 'code' or 'state'`,
+        });
       }
-    });
+    })();
   }
 }

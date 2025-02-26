@@ -13,7 +13,11 @@ export function arrayBufferToBase64(
 }
 
 export function safeURLencode(str: string): string {
-  return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return str.replaceAll(/\+/g, '-').replaceAll(/\//g, '_').replace(/=/g, '');
+}
+
+export function safeURLdecode(str: string): string {
+  return str.replaceAll(/_/g, '/').replaceAll(/-/g, '+');
 }
 
 export function randomString(length: number): string {
@@ -27,4 +31,10 @@ export async function sha256(plain: string): Promise<ArrayBuffer> {
   const encoder = new TextEncoder();
   const data = encoder.encode(plain);
   return crypto.subtle.digest('SHA-256', data);
+}
+
+export function extrackJwtClaims<T>(jwt: string): T {
+  const [, body] = jwt.split('.');
+
+  return JSON.parse(atob(safeURLdecode(body)));
 }
