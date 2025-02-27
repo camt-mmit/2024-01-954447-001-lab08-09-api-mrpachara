@@ -1,4 +1,11 @@
-import { Events, OverrideProperties } from '../models';
+import { OverrideProperties } from '../models';
+import {
+  Event,
+  EventDate,
+  EventDateAllDay,
+  EventDateTime,
+  EventsList,
+} from '../models/events';
 import { readonlyArray } from './common';
 
 /**
@@ -6,20 +13,20 @@ import { readonlyArray } from './common';
  */
 
 export function isEventDateAllDay<
-  DA extends OverrideProperties<Events.EventDateAllDay, unknown>,
-  DT extends OverrideProperties<Events.EventDateTime, unknown>,
+  DA extends OverrideProperties<EventDateAllDay, unknown>,
+  DT extends OverrideProperties<EventDateTime, unknown>,
 >(data: DA | DT | undefined): data is DA | undefined {
   return typeof (data as DA).date !== 'undefined';
 }
 
 export function isEventDateTime<
-  DA extends OverrideProperties<Events.EventDateAllDay, unknown>,
-  DT extends OverrideProperties<Events.EventDateTime, unknown>,
+  DA extends OverrideProperties<EventDateAllDay, unknown>,
+  DT extends OverrideProperties<EventDateTime, unknown>,
 >(data: DA | DT | undefined): data is DT | undefined {
   return typeof (data as DT).dateTime !== 'undefined';
 }
 
-export function parseEventDate(data: Events.EventDate) {
+export function parseEventDate(data: EventDate) {
   if (isEventDateTime(data)) {
     const { dateTime, ...rest } = data;
 
@@ -37,27 +44,24 @@ export function parseEventDate(data: Events.EventDate) {
   }
 }
 
-export function parseEvent(data: Events.Event) {
+export function parseEvent(data: Event) {
   const { start, end, ...rest } = data;
 
   function parseStartOrEnd(
     key: 'start',
-    value: Events.EventDate | undefined,
+    value: EventDate | undefined,
   ): {
     readonly start?: ReturnType<typeof parseEventDate>;
   };
 
   function parseStartOrEnd(
     key: 'end',
-    value: Events.EventDate | undefined,
+    value: EventDate | undefined,
   ): {
     readonly end?: ReturnType<typeof parseEventDate>;
   };
 
-  function parseStartOrEnd(
-    key: 'start' | 'end',
-    value: Events.EventDate | undefined,
-  ) {
+  function parseStartOrEnd(key: 'start' | 'end', value: EventDate | undefined) {
     if (typeof value === 'undefined') {
       return {};
     }
@@ -76,7 +80,7 @@ export function parseEvent(data: Events.Event) {
   } as const;
 }
 
-export function parseEventsList(data: Events.EventsList) {
+export function parseEventsList(data: EventsList) {
   return {
     ...data,
     items: readonlyArray((data?.items || []).map(parseEvent)),

@@ -1,4 +1,5 @@
-import { integer, RequiredProperties } from './common';
+import { RequiredProperties } from './common';
+import { integer } from './core';
 
 export type ObjectType = 'OBJECT_TYPE_UNSPECIFIED' | 'PERSON' | 'PAGE';
 

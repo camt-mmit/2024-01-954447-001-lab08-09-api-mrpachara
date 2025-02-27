@@ -1,171 +1,209 @@
-import { People } from '../models';
+import {
+  Address,
+  AgeRangeType,
+  Biography,
+  Birthday,
+  CalendarUrl,
+  ClientData,
+  ConnectionsList,
+  ContactGroupMembership,
+  CoverPhoto,
+  Date,
+  DomainMembership,
+  EmailAddress,
+  Event,
+  ExternalId,
+  FieldMetadata,
+  FileAs,
+  Gender,
+  HasMetadata,
+  ImClient,
+  Interest,
+  Locale,
+  Location,
+  Membership,
+  MiscKeyword,
+  Name,
+  Nickname,
+  Occupation,
+  Organization,
+  Person,
+  PersonMetadata,
+  PhoneNumber,
+  Photo,
+  ProfileMetadata,
+  Relation,
+  SipAddress,
+  Skill,
+  Source,
+  Url,
+  UserDefined,
+} from '../models/people';
 import { readonlyArray } from './common';
 
 /**
  * Parser Functions
  */
 
-export function parseDate(data?: People.Date) {
+export function parseDate(data?: Date) {
   return { ...data } as const;
 }
 
-export function parseProfileMetadata(data?: People.ProfileMetadata) {
+export function parseProfileMetadata(data?: ProfileMetadata) {
   return { ...data } as const;
 }
 
-export function parseSource(data?: People.Source) {
+export function parseSource(data?: Source) {
   return {
     ...data,
     profileMetadata: parseProfileMetadata(data?.profileMetadata),
   };
 }
 
-export function parseFieldMetadata(data?: People.FieldMetadata) {
+export function parseFieldMetadata(data?: FieldMetadata) {
   return {
     ...data,
     source: parseSource(data?.source),
   } as const;
 }
 
-export function parsePersonMetadata(data?: People.PersonMetadata) {
+export function parsePersonMetadata(data?: PersonMetadata) {
   return {
     ...data,
     sources: readonlyArray(
-      (data?.sources || []).map((data: People.Source) => parseSource(data)),
+      (data?.sources || []).map((data: Source) => parseSource(data)),
     ),
   } as const;
 }
 
-export function parseHasMetadata(data?: People.HasMetadata) {
+export function parseHasMetadata(data?: HasMetadata) {
   return {
     ...data,
     metadata: parseFieldMetadata(data?.metadata),
   } as const;
 }
 
-export function parseAddress(data?: People.Address) {
+export function parseAddress(data?: Address) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseAgeRangeType(data?: People.AgeRangeType) {
+export function parseAgeRangeType(data?: AgeRangeType) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseBiography(data?: People.Biography) {
+export function parseBiography(data?: Biography) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseBirthday(data?: People.Birthday) {
+export function parseBirthday(data?: Birthday) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseCalendarUrl(data?: People.CalendarUrl) {
+export function parseCalendarUrl(data?: CalendarUrl) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseClientData(data?: People.ClientData) {
+export function parseClientData(data?: ClientData) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseCoverPhoto(data?: People.CoverPhoto) {
+export function parseCoverPhoto(data?: CoverPhoto) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseEmailAddress(data?: People.EmailAddress) {
+export function parseEmailAddress(data?: EmailAddress) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseEvent(data?: People.Event) {
+export function parseEvent(data?: Event) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseExternalId(data?: People.ExternalId) {
+export function parseExternalId(data?: ExternalId) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseFileAs(data?: People.FileAs) {
+export function parseFileAs(data?: FileAs) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseGender(data?: People.Gender) {
+export function parseGender(data?: Gender) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseImClient(data?: People.ImClient) {
+export function parseImClient(data?: ImClient) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseInterest(data?: People.Interest) {
+export function parseInterest(data?: Interest) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseLocale(data?: People.Locale) {
+export function parseLocale(data?: Locale) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseLocation(data?: People.Location) {
+export function parseLocation(data?: Location) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseContactGroupMembership(
-  data?: People.ContactGroupMembership,
-) {
+export function parseContactGroupMembership(data?: ContactGroupMembership) {
   return { ...data } as const;
 }
 
-export function parseDomainMembership(data?: People.DomainMembership) {
+export function parseDomainMembership(data?: DomainMembership) {
   return { ...data } as const;
 }
 
-export function parseMembership(data?: People.Membership) {
+export function parseMembership(data?: Membership) {
   const membership = {
     ...data,
     ...parseHasMetadata(data),
@@ -173,9 +211,9 @@ export function parseMembership(data?: People.Membership) {
 
   if (
     ((
-      membership: People.Membership & { contactGroupMembership?: unknown },
-    ): membership is People.Membership & {
-      readonly contactGroupMembership?: People.ContactGroupMembership;
+      membership: Membership & { contactGroupMembership?: unknown },
+    ): membership is Membership & {
+      readonly contactGroupMembership?: ContactGroupMembership;
     } => typeof membership.contactGroupMembership !== 'undefined')(membership)
   ) {
     membership.contactGroupMembership = parseContactGroupMembership(
@@ -185,9 +223,9 @@ export function parseMembership(data?: People.Membership) {
 
   if (
     ((
-      membership: People.Membership & { domainMembership?: unknown },
-    ): membership is People.Membership & {
-      readonly domainMembership?: People.DomainMembership;
+      membership: Membership & { domainMembership?: unknown },
+    ): membership is Membership & {
+      readonly domainMembership?: DomainMembership;
     } => typeof membership.domainMembership !== 'undefined')(membership)
   ) {
     membership.domainMembership = parseDomainMembership(
@@ -198,35 +236,35 @@ export function parseMembership(data?: People.Membership) {
   return { ...membership } as const;
 }
 
-export function parseMiscKeyword(data?: People.MiscKeyword) {
+export function parseMiscKeyword(data?: MiscKeyword) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseName(data?: People.Name) {
+export function parseName(data?: Name) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseNickname(data?: People.Nickname) {
+export function parseNickname(data?: Nickname) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseOccupation(data?: People.Occupation) {
+export function parseOccupation(data?: Occupation) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseOrganization(data?: People.Organization) {
+export function parseOrganization(data?: Organization) {
   return {
     ...data,
     ...parseHasMetadata(data),
@@ -235,56 +273,56 @@ export function parseOrganization(data?: People.Organization) {
   } as const;
 }
 
-export function parsePhoneNumber(data?: People.PhoneNumber) {
+export function parsePhoneNumber(data?: PhoneNumber) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parsePhoto(data?: People.Photo) {
+export function parsePhoto(data?: Photo) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseRelation(data?: People.Relation) {
+export function parseRelation(data?: Relation) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseSipAddress(data?: People.SipAddress) {
+export function parseSipAddress(data?: SipAddress) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseSkill(data?: People.Skill) {
+export function parseSkill(data?: Skill) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseUrl(data?: People.Url) {
+export function parseUrl(data?: Url) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parseUserDefined(data?: People.UserDefined) {
+export function parseUserDefined(data?: UserDefined) {
   return {
     ...data,
     ...parseHasMetadata(data),
   } as const;
 }
 
-export function parsePerson(data: People.Person) {
+export function parsePerson(data: Person) {
   return {
     ...data,
     metadata: parsePersonMetadata(data?.metadata),
@@ -332,9 +370,7 @@ export function parsePerson(data: People.Person) {
   } as const;
 }
 
-export function parseConnectionsList(
-  data: People.ConnectionsList,
-): People.ConnectionsList {
+export function parseConnectionsList(data: ConnectionsList): ConnectionsList {
   return {
     ...data,
     connections: readonlyArray((data?.connections || []).map(parsePerson)),
@@ -343,28 +379,28 @@ export function parseConnectionsList(
 
 // Utilities
 
-export function getPrimaryMetadata<T extends People.HasMetadata>(
+export function getPrimaryMetadata<T extends HasMetadata>(
   items: T[],
 ): T | undefined {
   return items.find((item) => item?.metadata?.primary);
 }
 
-export function displayName(names: People.Name[]): string | undefined {
+export function displayName(names: Name[]): string | undefined {
   return getPrimaryMetadata(names)?.displayName;
 }
 
 export function displayEmailAddress(
-  emailAddresses: People.EmailAddress[],
+  emailAddresses: EmailAddress[],
 ): string | undefined {
   return getPrimaryMetadata(emailAddresses)?.value;
 }
 
 export function displayPhoneNumber(
-  phoneNumbers: People.PhoneNumber[],
+  phoneNumbers: PhoneNumber[],
 ): string | undefined {
   return getPrimaryMetadata(phoneNumbers)?.value;
 }
 
-export function urlPhotos(photos: People.Photo[]): string | undefined {
+export function urlPhotos(photos: Photo[]): string | undefined {
   return getPrimaryMetadata(photos)?.url;
 }

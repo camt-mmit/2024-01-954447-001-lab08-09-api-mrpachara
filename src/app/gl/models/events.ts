@@ -1,4 +1,5 @@
-import { date, datetime, etag, integer, RequiredProperties } from './common';
+import { RequiredProperties } from './common';
+import { date, datetime, etag, integer } from './core';
 
 export interface EventDateAllDay {
   readonly date: date;

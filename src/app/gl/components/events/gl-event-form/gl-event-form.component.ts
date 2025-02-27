@@ -9,7 +9,7 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Events } from '../../../models';
+import { EventDateTime, EventInsertBody } from '../../../models/events';
 
 @Component({
   selector: 'app-gl-event-form',
@@ -19,15 +19,15 @@ import { Events } from '../../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GlEventFormComponent {
-  readonly data = input<Events.EventInsertBody>();
+  readonly data = input<EventInsertBody>();
   readonly disabled = input(false, { transform: booleanAttribute });
 
-  readonly formSubmit = output<Events.EventInsertBody>();
+  readonly formSubmit = output<EventInsertBody>();
   readonly formCancel = output<void>();
 
   private readonly fb = inject(FormBuilder).nonNullable;
 
-  private readonly createFormGroup = (data?: Events.EventInsertBody) =>
+  private readonly createFormGroup = (data?: EventInsertBody) =>
     this.fb.group({
       summary: this.fb.control(data?.summary ?? '', { updateOn: 'blur' }),
       description: this.fb.control(data?.description ?? '', {
@@ -35,7 +35,7 @@ export class GlEventFormComponent {
       }),
       start: this.fb.group({
         dateTime: this.fb.control(
-          (data?.start as Events.EventDateTime | undefined)?.dateTime ?? '',
+          (data?.start as EventDateTime | undefined)?.dateTime ?? '',
           { updateOn: 'blur' },
         ),
         timeZone: this.fb.control(
@@ -44,7 +44,7 @@ export class GlEventFormComponent {
       }),
       end: this.fb.group({
         dateTime: this.fb.control(
-          (data?.start as Events.EventDateTime | undefined)?.dateTime ?? '',
+          (data?.start as EventDateTime | undefined)?.dateTime ?? '',
           { updateOn: 'blur' },
         ),
         timeZone: this.fb.control(
