@@ -22,7 +22,7 @@ export class GlAuthorizationPageComponent {
 
   protected readonly oauthService = inject(OauthService);
 
-  readonly #error = signal(
+  readonly error = signal(
     (() => {
       const error: string | undefined =
         this.activatedRoute.snapshot.queryParams['error'];
@@ -34,8 +34,6 @@ export class GlAuthorizationPageComponent {
         : undefined;
     })(),
   );
-
-  protected readonly error = this.#error.asReadonly();
 
   constructor() {
     (async () => {
@@ -55,9 +53,9 @@ export class GlAuthorizationPageComponent {
           });
         } catch (error) {
           if (error instanceof HttpErrorResponse) {
-            this.#error.set(error.error);
+            this.error.set(error.error);
           } else if (error instanceof Error) {
-            this.#error.set({
+            this.error.set({
               error: error.name,
               error_description: error.message,
             });
@@ -66,7 +64,7 @@ export class GlAuthorizationPageComponent {
           throw error;
         }
       } else {
-        this.#error.set({
+        this.error.set({
           error: 'bad_response',
           error_description: `The response doesn't have 'code' or 'state'`,
         });

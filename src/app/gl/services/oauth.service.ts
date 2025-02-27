@@ -2,13 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import {
   computed,
   CreateComputedOptions,
+  EnvironmentProviders,
   inject,
   Injectable,
   InjectionToken,
+  makeEnvironmentProviders,
   resource,
   Signal,
 } from '@angular/core';
-import { catchError, defer, firstValueFrom, of, switchMap } from 'rxjs';
+import { catchError, firstValueFrom, of } from 'rxjs';
 import {
   arrayBufferToBase64,
   extrackJwtClaims,
@@ -35,6 +37,17 @@ export const OAUTH_CONFIGURATION = new InjectionToken<OauthConfiguration>(
   'oauth-configuration',
 );
 
+export function provideOauth(config: OauthConfiguration): EnvironmentProviders {
+  return makeEnvironmentProviders([
+    {
+      provide: OAUTH_CONFIGURATION,
+      useValue: config,
+    },
+
+    OauthService,
+  ]);
+}
+
 interface StoredData {
   readonly expiredAt: number;
 }
@@ -56,9 +69,7 @@ interface StoredStateData<T extends StateData['state'] = StateData['state']>
   extends StateData<T>,
     StoredData {}
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class OauthService {
   private readonly config = inject(OAUTH_CONFIGURATION);
   private readonly storage = inject(StorageService);
@@ -233,20 +244,16 @@ export class OauthService {
   }
 
   async getAccessTokenData(): Promise<StoredAccessTokenData | null> {
-    return firstValueFrom(
-      defer(async () => await this.fetchAccessTokenData()).pipe(
-        switchMap(async (storedAccessTokenData) => {
-          if (
-            storedAccessTokenData &&
-            storedAccessTokenData.expiredAt >= Date.now()
-          ) {
-            return Promise.resolve(storedAccessTokenData);
-          } else {
-            return await this.refreshAccessTokenData();
-          }
-        }),
-      ),
-    );
+    const storedAccessTokenData = await await this.fetchAccessTokenData();
+
+    if (
+      storedAccessTokenData &&
+      storedAccessTokenData.expiredAt >= Date.now()
+    ) {
+      return storedAccessTokenData;
+    } else {
+      return await this.refreshAccessTokenData();
+    }
   }
 
   async getAuthorizationHeaders(): Promise<{

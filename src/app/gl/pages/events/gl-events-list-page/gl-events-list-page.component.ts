@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GlEventsListComponent } from '../../../components/events/gl-events-list/gl-events-list.component';
-import { EventsQueryParams } from '../../../models';
+import { Events } from '../../../models';
 import { EventsService } from '../../../services/events.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class GlEventsListPageComponent {
 
   private router = inject(Router);
 
-  protected onQuery(queryParams: EventsQueryParams): void {
+  protected onQuery(queryParams: Events.EventsQueryParams): void {
     this.router.navigate([], {
       replaceUrl: true,
       queryParams,

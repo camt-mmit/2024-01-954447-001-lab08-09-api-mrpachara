@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { take } from 'rxjs';
 import { GlEventFormComponent } from '../../../components/events/gl-event-form/gl-event-form.component';
-import { EventResourceInsertBody } from '../../../models';
+import { Events } from '../../../models';
 import { EventsService } from '../../../services/events.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class GlEventCreatePageComponent {
 
   protected readonly disabled = signal(false);
 
-  protected onFormSubmit(data: EventResourceInsertBody): void {
+  protected onFormSubmit(data: Events.EventInsertBody): void {
     this.disabled.set(true);
 
     this.service

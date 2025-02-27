@@ -2,17 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, Injector, ResourceRef } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { defer, fromEvent, Observable, switchMap, take, takeUntil } from 'rxjs';
-import {
-  EventResourceInsertBody,
-  EventsList,
-  EventsQueryParams,
-} from '../models';
+import { Events } from '../models';
 import { OauthService } from './oauth.service';
 
 const serviceUrl =
   'https://www.googleapis.com/calendar/v3/calendars/primary/events';
 
-const defaultQueryParams: EventsQueryParams = {
+const defaultQueryParams: Events.EventsQueryParams = {
   eventTypes: ['default', 'fromGmail'],
 };
 
@@ -24,16 +20,16 @@ export class EventsService {
   private readonly oauthService = inject(OauthService);
 
   getAll(
-    queryParams: () => EventsQueryParams,
+    queryParams: () => Events.EventsQueryParams,
     { injector = undefined as Injector | undefined } = {},
-  ): ResourceRef<EventsList | undefined> {
+  ): ResourceRef<Events.EventsList | undefined> {
     return rxResource({
       request: queryParams,
 
       loader: ({ request, abortSignal }) =>
         defer(() => this.oauthService.getAuthorizationHeaders()).pipe(
           switchMap((authorizationHeaders) =>
-            this.http.get<EventsList>(serviceUrl, {
+            this.http.get<Events.EventsList>(serviceUrl, {
               headers: { ...authorizationHeaders },
               params: {
                 ...defaultQueryParams,
@@ -54,7 +50,7 @@ export class EventsService {
     });
   }
 
-  create(data: EventResourceInsertBody): Observable<EventSource> {
+  create(data: Events.EventInsertBody): Observable<EventSource> {
     return defer(() => this.oauthService.getAuthorizationHeaders()).pipe(
       switchMap((authorizationHeaders) =>
         this.http.post<EventSource>(serviceUrl, data, {

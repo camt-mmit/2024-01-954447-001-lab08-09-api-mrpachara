@@ -11,7 +11,7 @@ export interface EventDateTime {
 
 export type EventDate = EventDateAllDay | EventDateTime;
 
-export interface EventResource {
+export interface Event {
   readonly kind: 'calendar#event';
   readonly etag: etag;
   readonly id: string;
@@ -149,7 +149,7 @@ export interface EventsList {
   }[];
   readonly nextPageToken?: string;
   readonly nextSyncToken?: string;
-  readonly items?: readonly EventResource[];
+  readonly items?: readonly Event[];
 }
 
 export interface EventsQueryParams {
@@ -246,7 +246,7 @@ export interface EventsQueryParams {
   readonly updatedMin?: datetime;
 }
 
-export type EventResourceInsertBody = RequiredProperties<
-  Omit<EventResource, 'kind' | 'etag' | 'id'>,
+export type EventInsertBody = RequiredProperties<
+  Omit<Event, 'kind' | 'etag' | 'id'>,
   'start' | 'end'
 >;

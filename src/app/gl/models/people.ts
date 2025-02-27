@@ -1,4 +1,4 @@
-import { integer } from './common';
+import { integer, RequiredProperties } from './common';
 
 export type ObjectType = 'OBJECT_TYPE_UNSPECIFIED' | 'PERSON' | 'PAGE';
 
@@ -341,17 +341,127 @@ export interface ConnectionsList {
   readonly totalItems: integer;
 }
 
-export interface ConnectionsListParams {
+export interface ConnectionsQueryParams {
+  /**
+   * **Required**. A field mask to restrict which fields on each person are returned. Multiple fields can be specified by separating them with commas. Valid values are:
+   * * addresses
+   * * ageRanges
+   * * biographies
+   * * birthdays
+   * * calendarUrls
+   * * clientData
+   * * coverPhotos
+   * * emailAddresses
+   * * events
+   * * externalIds
+   * * genders
+   * * imClients
+   * * interests
+   * * locales
+   * * locations
+   * * memberships
+   * * metadata
+   * * miscKeywords
+   * * names
+   * * nicknames
+   * * occupations
+   * * organizations
+   * * phoneNumbers
+   * * photos
+   * * relations
+   * * sipAddresses
+   * * skills
+   * * urls
+   * * userDefined
+   */
   readonly personFields: string;
+
+  /**
+   * *Optional*. A page token, received from a previous response `nextPageToken`. Provide this to retrieve the subsequent page.
+   *
+   * When paginating, all other parameters provided to `people.connections.list` must match the first call that provided the page token.
+   */
   readonly pageToken?: string;
+
+  /**
+   * *Optional*. The number of connections to include in the response. Valid values are between 1 and 1000, inclusive. Defaults to 100 if not set or set to 0.
+   */
   readonly pageSize?: integer;
+
+  /**
+   * *Optional*. The order in which the connections should be sorted. Defaults to `LAST_MODIFIED_ASCENDING`.
+   */
   readonly sortOrder?: SortOrder;
+
+  /**
+   * *Optional*. Whether the response should return `nextSyncToken` on the last page of results. It can be used to get incremental changes since the last request by setting it on the request `syncToken`.
+   *
+   * More details about sync behavior at `people.connections.list`.
+   */
   readonly requestSyncToken?: boolean;
+
+  /**
+   * *Optional*. A sync token, received from a previous response `nextSyncToken` Provide this to retrieve only the resources changed since the last request.
+   *
+   * When syncing, all other parameters provided to `people.connections.list` must match the first call that provided the sync token.
+   *
+   * More details about sync behavior at `people.connections.list`.
+   */
   readonly syncToken?: string;
+
+  /**
+   * *Optional*. A mask of what source types to return. Defaults to `READ_SOURCE_TYPE_CONTACT` and `READ_SOURCE_TYPE_PROFILE` if not set.
+   */
   readonly sources?: readonly SourceType[];
 }
 
-export interface CreateContactParams {
-  readonly personFields: string;
+export interface ContactCreateQueryParams {
+  /**
+   * *Optional*. A field mask to restrict which fields on each person are returned. Multiple fields can be specified by separating them with commas. Defaults to all fields if not set. Valid values are:
+   * * addresses
+   * * ageRanges
+   * * biographies
+   * * birthdays
+   * * calendarUrls
+   * * clientData
+   * * coverPhotos
+   * * emailAddresses
+   * * events
+   * * externalIds
+   * * genders
+   * * imClients
+   * * interests
+   * * locales
+   * * locations
+   * * memberships
+   * * metadata
+   * * miscKeywords
+   * * names
+   * * nicknames
+   * * occupations
+   * * organizations
+   * * phoneNumbers
+   * * photos
+   * * relations
+   * * sipAddresses
+   * * skills
+   * * urls
+   * * userDefined
+   */
+  readonly personFields?: string;
+
+  /**
+   * *Optional*. A mask of what source types to return. Defaults to `READ_SOURCE_TYPE_CONTACT` and `READ_SOURCE_TYPE_PROFILE` if not set.
+   */
   readonly sources?: readonly SourceType[];
 }
+
+export type ContactCreateBody = Omit<
+  Person,
+  'resourceName' | 'etag' | 'names'
+> & {
+  readonly names: readonly [
+    RequiredProperties<Name, 'givenName'>,
+    ...RequiredProperties<Name, 'givenName'>[],
+  ];
+};
