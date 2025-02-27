@@ -16,7 +16,7 @@ import {
   extrackJwtClaims,
   randomString,
   sha256,
-} from '../helpers';
+} from '../helpers/encryption';
 import {
   AccessTokenData,
   AccessTokenNotFound,
@@ -24,7 +24,7 @@ import {
   OauthConfiguration,
   RefreshTokenData,
   StateTokenNotFound,
-} from '../models';
+} from '../models/services';
 import { StorageService } from './storage.service';
 
 const codeVerifierLength = 54;

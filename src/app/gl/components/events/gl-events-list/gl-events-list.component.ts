@@ -7,12 +7,16 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { EventsHelpers, readonlyArray } from '../../../helpers';
-import { Events } from '../../../models';
+import { readonlyArray } from '../../../helpers';
+import {
+  displayEventTimeRange,
+  parseEventsList,
+} from '../../../helpers/events';
+import { EventsList, EventsQueryParams } from '../../../models/events';
 import { GlLoadingComponent } from '../../common/gl-loading/gl-loading.component';
 
-function parseData(data: Events.EventsList) {
-  const parsedEventsList = EventsHelpers.parseEventsList(data);
+function parseData(data: EventsList) {
+  const parsedEventsList = parseEventsList(data);
   const { items, ...rest } = parsedEventsList;
 
   return {
@@ -20,7 +24,7 @@ function parseData(data: Events.EventsList) {
     items: readonlyArray(
       items.map((item) => ({
         ...item,
-        displayDateTime: EventsHelpers.displayEventTimeRange(item),
+        displayDateTime: displayEventTimeRange(item),
       })),
     ),
   };
@@ -34,11 +38,11 @@ function parseData(data: Events.EventsList) {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GlEventsListComponent {
-  readonly data = input.required<Events.EventsList | undefined>();
-  readonly queryParams = input<Events.EventsQueryParams>({});
+  readonly data = input.required<EventsList | undefined>();
+  readonly queryParams = input<EventsQueryParams>({});
   readonly isLoading = input(false);
 
-  readonly queryParamsChange = output<Events.EventsQueryParams>();
+  readonly queryParamsChange = output<EventsQueryParams>();
   readonly reload = output<void>();
 
   protected readonly parsedData = computed(
