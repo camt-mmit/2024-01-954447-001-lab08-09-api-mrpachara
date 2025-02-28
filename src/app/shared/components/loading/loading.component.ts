@@ -7,16 +7,16 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-gl-loading',
+  selector: 'app-loading',
   imports: [],
-  templateUrl: './gl-loading.component.html',
-  styleUrl: './gl-loading.component.scss',
+  templateUrl: './loading.component.html',
+  styleUrl: './loading.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[style.---appear-delay]': 'apperDelay()',
   },
 })
-export class GlLoadingComponent {
+export class LoadingComponent {
   readonly delay = input(0, { transform: numberAttribute });
 
   readonly apperDelay = computed(() => `${this.delay() / 1_000}s`);

@@ -5,7 +5,7 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
-import { GlLoadingComponent } from '../../components/common/gl-loading/gl-loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { OauthService } from '../../services/oauth.service';
 
 const scopes = [
@@ -19,7 +19,7 @@ export interface GlState {
 
 @Component({
   selector: 'app-gl-page',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, GlLoadingComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, LoadingComponent],
   templateUrl: './gl-page.component.html',
   styleUrl: './gl-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

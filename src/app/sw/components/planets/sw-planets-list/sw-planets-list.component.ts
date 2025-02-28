@@ -8,17 +8,17 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { SwNumberDirective } from '../../../directives/sw-number.directive';
 import { parsePlanetsList } from '../../../helpers';
 import { Planet, ResourcesList, SearchData } from '../../../models';
-import { SwLoadingComponent } from '../../common/sw-loading/sw-loading.component';
 
 @Component({
   selector: 'app-sw-planets-list',
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
-    SwLoadingComponent,
+    LoadingComponent,
     SwNumberDirective,
   ],
   templateUrl: './sw-planets-list.component.html',

@@ -6,7 +6,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { SwLoadingComponent } from '../components/common/sw-loading/sw-loading.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { SwMessageTemplate } from '../tokens';
 
 interface SwResourceTemplateContext<T> {
@@ -42,7 +42,7 @@ export class SwResourceDirective<T> {
       viewContainerRef.clear();
 
       if (typeof resource === 'undefined') {
-        const ref = viewContainerRef.createComponent(SwLoadingComponent);
+        const ref = viewContainerRef.createComponent(LoadingComponent);
         ref.changeDetectorRef.detectChanges();
         onDestroy(() => ref.destroy());
       } else if (resource === null) {

@@ -7,13 +7,13 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { readonlyArray } from '../../../helpers';
 import {
   displayEventTimeRange,
   parseEventsList,
 } from '../../../helpers/events';
 import { EventsList, EventsQueryParams } from '../../../models/events';
-import { GlLoadingComponent } from '../../common/gl-loading/gl-loading.component';
 
 function parseData(data: EventsList) {
   const parsedEventsList = parseEventsList(data);
@@ -32,7 +32,7 @@ function parseData(data: EventsList) {
 
 @Component({
   selector: 'app-gl-events-list',
-  imports: [ReactiveFormsModule, GlLoadingComponent],
+  imports: [ReactiveFormsModule, LoadingComponent],
   templateUrl: './gl-events-list.component.html',
   styleUrl: './gl-events-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

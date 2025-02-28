@@ -7,13 +7,13 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { parsePeopleList } from '../../../helpers';
 import { Person, ResourcesList, SearchData } from '../../../models';
-import { SwLoadingComponent } from '../../common/sw-loading/sw-loading.component';
 
 @Component({
   selector: 'app-sw-people-list',
-  imports: [ReactiveFormsModule, SwLoadingComponent],
+  imports: [ReactiveFormsModule, LoadingComponent],
   templateUrl: './sw-people-list.component.html',
   styleUrl: './sw-people-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

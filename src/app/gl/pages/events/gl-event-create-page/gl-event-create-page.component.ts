@@ -1,10 +1,13 @@
+import { Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { take } from 'rxjs';
+import { createNavigateBackFn } from '../../../../shared/helpers/routes';
 import { GlEventFormComponent } from '../../../components/events/gl-event-form/gl-event-form.component';
 import { EventInsertBody } from '../../../models/events';
 import { EventsService } from '../../../services/events.service';
@@ -21,6 +24,10 @@ export class GlEventCreatePageComponent {
 
   protected readonly disabled = signal(false);
 
+  private readonly location = inject(Location);
+
+  private readonly navigationBack = createNavigateBackFn();
+
   protected onFormSubmit(data: EventInsertBody): void {
     this.disabled.set(true);
 
@@ -28,12 +35,14 @@ export class GlEventCreatePageComponent {
       .create(data)
       .pipe(take(1))
       .subscribe({
-        complete: () => history.back(),
+        complete: () => this.navigationBack(),
         error: () => this.disabled.set(false),
       });
   }
 
+  private readonly router = inject(Router);
+
   protected onFormCancel(): void {
-    history.back();
+    this.navigationBack();
   }
 }
